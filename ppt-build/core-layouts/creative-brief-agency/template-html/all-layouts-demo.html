@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>creative-brief-agency — All Layouts Demo</title>
+<style>
+/* ─── DESIGN TOKENS ────────────────────────────────────────
+   Source: creative-brief-agency/analysis.md + full PDF scan
+   Canvas: 16:9 widescreen (13.333 × 7.5 inch)
+   Layouts: 18 (A–R), all pages of original.pdf
+──────────────────────────────────────────────────────────── */
+:root {
+  --black: #0F0F0F;
+  --lime:  #C6F53D;
+  --white: #FFFFFF;
+  --gray:  #8E8E8E;
+  --disp:  Impact, 'Arial Black', sans-serif;
+  --body:  'Helvetica Neue', Arial, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:var(--body); background:#111; min-height:100vh; }
+
+/* ── VIEWER CHROME ── */
+#app-hdr { background:#000; padding:9px 16px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid #222; }
+#app-hdr h1 { font-size:12px; color:var(--lime); letter-spacing:.08em; }
+#app-hdr small { font-size:10px; color:#444; }
+#tabs { display:flex; overflow-x:auto; background:#000;
+  padding:6px 10px; gap:4px; border-bottom:1px solid #222; }
+#tabs button { background:#1a1a1a; color:#666; border:1px solid #2a2a2a;
+  border-radius:3px; padding:4px 9px; font-size:10.5px;
+  cursor:pointer; white-space:nowrap; transition:background .12s; }
+#tabs button.active { background:var(--lime); color:#000;
+  border-color:var(--lime); font-weight:700; }
+#slide-area { padding:18px; display:flex; flex-direction:column;
+  align-items:center; gap:8px; }
+#kbd-hint { font-size:10px; color:#444; margin-top:6px; }
+
+/* ── SLIDE WRAPPER ── */
+.page {
+  width: min(940px, 100%);
+  aspect-ratio: 16 / 9;
+  position: relative; overflow: hidden;
+  background: var(--black);
+  display: none;
+  box-shadow: 0 4px 32px rgba(0,0,0,.8);
+  font-size: 1px; /* baseline for % font-size */
+}
+.page.active { display: block; }
+
+/* ── SHARED UTILS ── */
+.ph { width:100%; height:100%;
+  background:linear-gradient(135deg,#1e1e1e 0%,#2a2a2a 60%,#181818 100%);
+  display:flex; align-items:center; justify-content:center;
+  color:#3a3a3a; font-size:100%; letter-spacing:.12em; text-transform:uppercase;
+  font-family:var(--body); }
+
+/* ────────────────────────────────────────────────────────
+   A — COVER
+   黑底 · 3欄頂標 · 左超粗大字 · 右圖 · 底LIME橫條
+──────────────────────────────────────────────────────── */
+.A .hdr { position:absolute; top:4.7%; left:0; width:100%;
+  display:flex; justify-content:space-between; padding:0 3.75%;
+  font-size:133%; font-weight:700; letter-spacing:.18em; color:var(--white); }
+.A .title { position:absolute; left:3.75%; top:16%; width:42%; }
+.A .title span { display:block; font-family:var(--disp);
+  font-size:1733%; font-weight:900; color:var(--white);
+  line-height:.88; letter-spacing:-.02em; text-transform:uppercase; }
+.A .photo { position:absolute; right:0; top:13.3%; width:50%; height:54%; overflow:hidden; }
+.A .footer { position:absolute; left:3.75%; bottom:2.7%; width:92.5%; height:21.3%;
+  background:var(--lime); display:flex; align-items:center; justify-content:flex-end;
+  padding-right:3%; gap:6%; }
+.A .pb { display:flex; flex-direction:column; }
+.A .pb .lbl { font-size:147%; font-weight:700; letter-spacing:.15em; color:var(--black); }
+.A .pb .val { font-size:187%; color:var(--black); }
+
+/* ────────────────────────────────────────────────────────
+   B — AGENDA
+   黑左25% · 中圖30% · 螢光綠右45% · 目錄列表
+──────────────────────────────────────────────────────── */
+.B .cl { position:absolute; left:0; top:0; width:25%; height:100%; background:var(--black); }
+.B .cl .stl { position:absolute; top:6.7%; left:6%; right:6%;
+  font-size:133%; font-weight:700; letter-spacing:.18em; color:var(--white); }
+.B .cl .aw { position:absolute; bottom:6%; left:6%;
+  font-family:var(--disp); font-size:960%; font-weight:900;
+  color:var(--white); text-transform:uppercase; letter-spacing:-.02em; }
+.B .cm { position:absolute; left:25%; top:0; width:30%; height:100%; overflow:hidden; }
+.B .cr { position:absolute; right:0; top:0; width:45%; height:100%;
+  background:var(--lime); display:flex; flex-direction:column;
+  justify-content:center; padding:0 6% 0 8%; }
+.B .mi { display:flex; align-items:center; justify-content:space-between;
+  padding:3.5% 0; border-bottom:1.5px solid rgba(0,0,0,.2); }
+.B .mi:last-child { border-bottom:none; }
+.B .mi .mt { font-family:var(--disp); font-size:373%; font-weight:900;
+  color:var(--black); text-transform:uppercase; }
+.B .mi .ma { font-size:267%; color:var(--black); opacity:.6; }
+
+/* ────────────────────────────────────────────────────────
+   C — SECTION INTRO A
+   上全寬圖 · LIME label條 · 左下黑 2-line Impact · 右下副圖
+──────────────────────────────────────────────────────── */
+.C .tp { position:absolute; left:0; top:0; width:100%; height:37.4%; overflow:hidden; }
+.C .ll { position:absolute; left:0; top:30.7%; width:48.7%; height:6.7%;
+  background:var(--lime); display:flex; align-items:center; padding-left:3.75%;
+  font-size:173%; font-weight:700; letter-spacing:.25em; color:var(--black); }
+.C .bb { position:absolute; left:0; top:37.4%; width:60%; height:62.6%;
+  background:var(--black); display:flex; flex-direction:column;
+  justify-content:center; padding-left:3.75%; }
+.C .bb span { display:block; font-family:var(--disp);
+  font-size:960%; font-weight:900; color:var(--white); text-transform:uppercase;
+  line-height:.92; letter-spacing:-.02em; }
+.C .rp { position:absolute; right:0; top:37.4%; width:40%; height:62.6%; overflow:hidden; }
+
+/* ────────────────────────────────────────────────────────
+   D — SECTION INTRO B
+   左半滿版圖 · 右上LIME條 · 右黑下 Impact大字 + body
+──────────────────────────────────────────────────────── */
+.D .lp { position:absolute; left:0; top:0; width:46%; height:100%; overflow:hidden; }
+.D .rt { position:absolute; right:0; top:0; width:54%; height:100%; background:var(--black); }
+.D .lime-top { position:absolute; right:0; top:0; width:54%; height:18.7%; background:var(--lime);
+  display:flex; align-items:center; padding-left:5%;
+  font-size:133%; font-weight:700; letter-spacing:.18em; color:var(--black); }
+.D .impact { position:absolute; right:0; top:18.7%; width:54%; height:48%;
+  background:var(--black); display:flex; align-items:center; padding:0 5%; }
+.D .impact span { font-family:var(--disp); font-size:1200%;
+  font-weight:900; color:var(--white); text-transform:uppercase;
+  line-height:.88; letter-spacing:-.02em; }
+.D .body-block { position:absolute; right:0; top:66.7%; width:54%; height:33.3%;
+  background:var(--black); padding:4% 5%; display:flex; align-items:flex-start; }
+.D .body-block p { font-size:147%; color:var(--white); line-height:1.7; text-align:justify; }
+
+/* ────────────────────────────────────────────────────────
+   E — CONTENT SPLIT 3-COL
+   黑底 · 頂部置中大標 · 三欄 LIME左|圖中|LIME右
+──────────────────────────────────────────────────────── */
+.E { background:var(--black); }
+.E .stag { position:absolute; top:6.7%; left:0; width:100%; text-align:center;
+  font-size:187%; font-weight:700; letter-spacing:.25em; color:var(--lime); }
+.E .hd { position:absolute; top:12.7%; left:0; width:100%; text-align:center;
+  font-family:var(--disp); font-size:960%; font-weight:900;
+  color:var(--white); text-transform:uppercase; }
+.E .cols { position:absolute; left:3.75%; right:3.75%; top:38%; bottom:3%;
+  display:flex; gap:1.5%; }
+.E .col { flex:1; display:flex; flex-direction:column; }
+.E .lime-bar { width:100%; height:40%; background:var(--lime);
+  display:flex; align-items:center; justify-content:center; padding:4%; }
+.E .lime-bar .ct { font-family:var(--disp); font-size:347%;
+  color:var(--black); text-transform:uppercase; text-align:center; line-height:1.1; }
+.E .col-body { font-size:147%; color:var(--white); line-height:1.7;
+  margin-top:6%; text-align:justify; }
+.E .col-mid { flex:1.1; }
+
+/* ────────────────────────────────────────────────────────
+   F — ABOUT BRAND (4-panel)
+   左全高圖 · 中黑塊STUDIO+大字 · 右上LIME文字 · 右下圖
+──────────────────────────────────────────────────────── */
+.F .lp { position:absolute; left:0; top:0; width:26%; height:100%; overflow:hidden; }
+.F .mc { position:absolute; left:26%; top:0; width:26%; height:100%;
+  background:var(--black); display:flex; flex-direction:column;
+  justify-content:flex-end; padding:5% 6% 8%; }
+.F .mc .stl { font-size:133%; font-weight:700; letter-spacing:.18em; color:var(--white); margin-bottom:8%; }
+.F .mc .bw { font-family:var(--disp); font-size:1067%;
+  color:var(--white); text-transform:uppercase; line-height:.88; letter-spacing:-.02em; }
+.F .rt-top { position:absolute; right:0; top:0; width:48%; height:40%;
+  background:var(--lime); padding:6% 6% 4%; display:flex; flex-direction:column; justify-content:flex-end; }
+.F .rt-top p { font-size:147%; color:var(--black); line-height:1.7; text-align:justify; }
+.F .rt-bot { position:absolute; right:0; top:40%; width:48%; height:60%; overflow:hidden; }
+
+/* ────────────────────────────────────────────────────────
+   G — BRIEF HISTORY COLLAGE (5-panel)
+   左上黑Impact · 中上圖 · 右上LIME文字 · 左下LIME文字 · 右下圖
+──────────────────────────────────────────────────────── */
+.G .tl { position:absolute; left:0; top:0; width:26%; height:54%;
+  background:var(--black); display:flex; flex-direction:column;
+  justify-content:center; padding:6%; }
+.G .tl .bw { font-family:var(--disp); font-size:1067%;
+  color:var(--white); text-transform:uppercase; line-height:.88; letter-spacing:-.02em; }
+.G .tc { position:absolute; left:26%; top:0; width:28%; height:54%; overflow:hidden; }
+.G .tr { position:absolute; right:0; top:0; width:46%; height:54%;
+  background:var(--lime); padding:6% 6% 4%; display:flex; flex-direction:column; justify-content:flex-end; }
+.G .tr p { font-size:147%; color:var(--black); line-height:1.7; text-align:justify; }
+.G .bl { position:absolute; left:0; bottom:0; width:46%; height:46%;
+  background:var(--lime); padding:6%; display:flex; align-items:flex-end; }
+.G .bl p { font-size:147%; color:var(--black); line-height:1.7; }
+.G .br { position:absolute; right:0; bottom:0; width:54%; height:46%; overflow:hidden; }
+
+/* ────────────────────────────────────────────────────────
+   H — TARGET AUDIENCE
+   左黑Impact · 右上全寬圖 · 底LIME橫條 (標題+內文)
+──────────────────────────────────────────────────────── */
+.H .lbl { position:absolute; left:3.75%; top:6.7%;
+  font-size:133%; font-weight:700; letter-spacing:.18em; color:var(--white); }
+.H .bw { position:absolute; left:3%; top:10%;
+  font-family:var(--disp); font-size:1067%;
+  color:var(--white); text-transform:uppercase; line-height:.88; letter-spacing:-.02em;
+  width:37%; }
+.H .rp { position:absolute; right:0; top:0; width:63%; height:56%; overflow:hidden; }
+.H .lime-bar { position:absolute; left:0; bottom:0; width:100%; height:44%;
+  background:var(--lime); display:flex; align-items:center; gap:8%; padding:0 5%; }
+.H .lime-bar .ht { font-family:var(--disp); font-size:400%;
+  color:var(--black); text-transform:uppercase; line-height:1.05; flex:0 0 35%; }
+.H .lime-bar p { font-size:147%; color:var(--black); line-height:1.7; text-align:justify; }
+
+/* ────────────────────────────────────────────────────────
+   I — REFERENCES (上圖 · 左下黑Impact · 右下LIME文字)
+──────────────────────────────────────────────────────── */
+.I .tp { position:absolute; left:0; top:0; width:100%; height:52%; overflow:hidden; }
+.I .tp .ot { position:absolute; left:3.75%; top:6.7%;
+  font-family:var(--disp); font-size:427%; color:var(--black);
+  line-height:1.15; width:38%; text-transform:none; font-weight:900; }
+.I .bl { position:absolute; left:0; bottom:0; width:50%; height:48%;
+  background:var(--black); display:flex; align-items:center; padding-left:5%; }
+.I .bl span { font-family:var(--disp); font-size:960%;
+  color:var(--white); text-transform:uppercase; letter-spacing:-.02em; }
+.I .br { position:absolute; right:0; bottom:0; width:50%; height:48%;
+  background:var(--lime); padding:6%; display:flex; align-items:center; }
+.I .br p { font-size:147%; color:var(--black); line-height:1.7; text-align:justify; }
+
+/* ────────────────────────────────────────────────────────
+   J — PHOTO MOODBOARD (3-col photo+lime caption cards)
+──────────────────────────────────────────────────────── */
+.J { background:var(--black); }
+.J .grid { position:absolute; inset:3%; display:flex; gap:2%; align-items:stretch; }
+.J .card { flex:1; display:flex; flex-direction:column; }
+.J .card .img { flex:1; overflow:hidden; }
+.J .card .cap { background:var(--lime); padding:5% 6%;
+  font-size:147%; color:var(--black); line-height:1.5; }
+.J .card.tall { flex:1.1; }
+.J .footer-lbl { position:absolute; bottom:1%; right:2%;
+  font-size:133%; font-weight:700; letter-spacing:.18em; color:var(--white); }
+
+/* ────────────────────────────────────────────────────────
+   K — TWO-COL PHOTO LIME
+   左黑+圖 · 右LIME (STUDIO標籤+嵌入圖+body)
+──────────────────────────────────────────────────────── */
+.K .lp { position:absolute; left:0; top:0; width:44%; height:100%;
+  background:var(--black); display:flex; align-items:center;
+  justify-content:center; padding:6%; }
+.K .lp .photo-wrap { width:100%; height:80%; overflow:hidden; }
+.K .rp { position:absolute; right:0; top:0; width:56%; height:100%;
+  background:var(--lime); padding:6% 5%; display:flex; flex-direction:column; gap:6%; }
+.K .rp .stl { font-size:133%; font-weight:700; letter-spacing:.18em; color:var(--black); }
+.K .rp .embedded { width:100%; height:50%; overflow:hidden; }
+.K .rp p { font-size:147%; color:var(--black); line-height:1.7; text-align:justify; }
+
+/* ────────────────────────────────────────────────────────
+   L — COMPETITORS-LAYOUT1
+   左LIME全高 (STUDIO+圖+Impact) · 右黑 (2個LIME卡)
+──────────────────────────────────────────────────────── */
+.L .lc { position:absolute; left:0; top:0; width:38%; height:100%;
+  background:var(--lime); display:flex; flex-direction:column;
+  padding:5% 6%; gap:5%; }
+.L .lc .stl { font-size:133%; font-weight:700; letter-spacing:.18em; color:var(--black); }
+.L .lc .pic { flex:1; overflow:hidden; }
+.L .lc .bw { font-family:var(--disp); font-size:960%;
+  color:var(--black); text-transform:uppercase; letter-spacing:-.02em; line-height:.88; }
+.L .rc { position:absolute; right:0; top:0; width:62%; height:100%;
+  background:var(--black); display:flex; flex-direction:column;
+  justify-content:center; padding:5% 5%; gap:4%; }
+.L .card { background:var(--lime); padding:5% 6%; border-radius:2px; }
+.L .card .ch { font-family:var(--disp); font-size:400%;
+  color:var(--black); text-transform:none; font-weight:900; margin-bottom:3%; }
+.L .card p { font-size:147%; color:var(--black); line-height:1.7; }
+
+/* ────────────────────────────────────────────────────────
+   M — CHART SPLIT
+   左黑條形圖 · 右LIME大框 (Impact+body+小圖)
+──────────────────────────────────────────────────────── */
+.M { background:var(--black); }
+.M .chart-area { position:absolute; left:2%; top:5%; width:54%; height:90%;
+  display:flex; flex-direction:column; justify-content:flex-end; gap:2%; }
+.M .chart-bars { display:flex; align-items:flex-end; gap:2%; height:75%; }
+.M .bar-group { flex:1; display:flex; align-items:flex-end; gap:2%; }
+.M .bar { width:33%; border-radius:2px 2px 0 0; }
+.M .bar.lime { background:var(--lime); }
+.M .bar.blue { background:#5B8DEF; }
+.M .bar.white { background:#999; }
+.M .chart-labels { display:flex; gap:2%; }
+.M .chart-labels span { flex:1; text-align:center; font-size:133%; color:var(--white); }
+.M .y-labels { position:absolute; left:2%; top:5%; height:90%;
+  display:flex; flex-direction:column; justify-content:space-between; }
+.M .y-labels span { font-size:120%; color:var(--gray); }
+.M .rc { position:absolute; right:2%; top:5%; width:42%; height:90%;
+  background:var(--lime); display:flex; flex-direction:column;
+  padding:6%; gap:5%; }
+.M .rc .bw { font-family:var(--disp); font-size:960%;
+  color:var(--black); text-transform:uppercase; letter-spacing:-.02em; line-height:.88; }
+.M .rc p { font-size:147%; color:var(--black); line-height:1.7; flex:1; }
+.M .rc .pic { height:35%; overflow:hidden; }
+
+/* ────────────────────────────────────────────────────────
+   N — RISK TABLE
+   黑底 · 頂部左Impact · 右上圖 · LIME表頭table
+──────────────────────────────────────────────────────── */
+.N { background:var(--black); }
+.N .bw { position:absolute; left:3%; top:3%;
+  font-family:var(--disp); font-size:960%;
+  color:var(--white); text-transform:uppercase; letter-spacing:-.02em; line-height:.88;
+  width:65%; }
+.N .pic { position:absolute; right:3%; top:3%; width:32%; height:30%; overflow:hidden; }
+.N table { position:absolute; left:3%; right:3%; top:37%; bottom:4%;
+  border-collapse:collapse; width:94%; }
+.N thead td { background:var(--lime); color:var(--black);
+  font-family:var(--disp); font-size:267%; font-weight:900;
+  padding:2.5% 3%; text-transform:uppercase; }
+.N tbody td { border:1px solid #2a2a2a; padding:2% 3%;
+  font-size:147%; color:var(--white); vertical-align:top; }
+.N tbody tr:nth-child(even) td { background:#161616; }
+.N td:first-child { width:8%; text-align:center; }
+.N td:nth-child(2) { width:16%; }
+
+/* ────────────────────────────────────────────────────────
+   O — DELIVERABLES
+   上半:3個LIME卡+body · 下半:大圖overlay Impact
+──────────────────────────────────────────────────────── */
+.O { background:var(--black); }
+.O .top { position:absolute; left:3%; top:3%; right:3%; height:54%;
+  display:flex; gap:2%; }
+.O .card { flex:1; display:flex; flex-direction:column; gap:5%; }
+.O .card .lime-hd { background:var(--lime); padding:6% 6% 4%;
+  font-family:var(--disp); font-size:373%; color:var(--black);
+  text-transform:none; font-weight:900; line-height:1.1; }
+.O .card p { font-size:140%; color:var(--white); line-height:1.7; text-align:justify; }
+.O .bottom { position:absolute; left:0; bottom:0; width:100%; height:44%; overflow:hidden; }
+.O .bottom .bw { position:absolute; left:3%; bottom:6%;
+  font-family:var(--disp); font-size:1067%;
+  color:var(--black); text-transform:uppercase; letter-spacing:-.02em; line-height:.88;
+  z-index:2; }
+
+/* ────────────────────────────────────────────────────────
+   P — TIMELINE (Phase 1-4 with connecting LIME lines)
+──────────────────────────────────────────────────────── */
+.P { background:var(--black); }
+.P .bw { position:absolute; left:3%; bottom:6%;
+  font-family:var(--disp); font-size:1067%;
+  color:var(--white); text-transform:uppercase; letter-spacing:-.02em; line-height:.88; }
+.P .ph1 { position:absolute; left:3%; top:7%; }
+.P .ph2 { position:absolute; left:30%; top:7%; }
+.P .ph3 { position:absolute; left:34%; bottom:41%; }
+.P .ph4 { position:absolute; left:60%; bottom:41%; }
+.P .phase-box { background:var(--lime); padding:1.5% 4%;
+  font-family:var(--disp); font-size:267%; font-weight:900;
+  color:var(--black); display:inline-block; margin-bottom:3%; }
+.P .phase-lbl { font-size:147%; font-weight:700; letter-spacing:.1em;
+  color:var(--white); margin-bottom:2%; }
+.P .phase-body { font-size:133%; color:var(--white); line-height:1.6; width:200%; }
+.P .pic1 { position:absolute; right:3%; top:7%; width:35%; height:44%; overflow:hidden; }
+.P .pic2 { position:absolute; left:28%; bottom:3%; width:18%; height:36%; overflow:hidden; }
+/* connecting lime lines (CSS-only approximation) */
+.P .line-h { position:absolute; height:2px; background:var(--lime); }
+.P .line-v { position:absolute; width:2px; background:var(--lime); }
+.P .l1 { left:10%; top:11.5%; width:22%; }
+.P .l2 { left:32%; top:11.5%; height:38%; top:11.5%; }
+.P .l3 { left:32%; top:49.5%; width:4%; }
+.P .l4 { left:50%; bottom:44%; width:12%; }
+
+/* ────────────────────────────────────────────────────────
+   Q — OUR TEAM
+   左LIME條+OUR TEAM豎排 · 3等分portrait照片欄 · 底黑名字條
+──────────────────────────────────────────────────────── */
+.Q .lime-strip { position:absolute; left:0; top:0; width:10%; height:100%;
+  background:var(--lime); display:flex; align-items:center; justify-content:center; }
+.Q .lime-strip .vt { font-family:var(--disp); font-size:720%;
+  color:var(--black); text-transform:uppercase; writing-mode:vertical-rl;
+  transform:rotate(180deg); letter-spacing:.05em; }
+.Q .lime-strip .stl { position:absolute; top:5%; left:10%;
+  font-size:133%; font-weight:700; letter-spacing:.15em; color:var(--black); }
+.Q .photos { position:absolute; left:10%; top:0; right:0; height:72%;
+  display:flex; }
+.Q .col-ph { flex:1; overflow:hidden; }
+.Q .name-bar { position:absolute; left:10%; right:0; bottom:0; height:28%;
+  background:var(--black); display:flex; }
+.Q .nm { flex:1; padding:5% 4%; display:flex; flex-direction:column; gap:5%; }
+.Q .nm .name { font-family:var(--disp); font-size:373%;
+  color:var(--white); font-weight:900; text-transform:none; line-height:1.05; }
+.Q .nm .role { font-size:133%; color:var(--white); font-weight:700; letter-spacing:.05em; }
+
+/* ────────────────────────────────────────────────────────
+   R — THANK YOU
+   左半portrait圖 · 右LIME (STUDIO + THANK YOU Impact + 聯絡資訊)
+──────────────────────────────────────────────────────── */
+.R .lp { position:absolute; left:0; top:0; width:36%; height:100%; overflow:hidden; }
+.R .rc { position:absolute; right:0; top:0; width:64%; height:100%;
+  background:var(--lime); padding:5% 6%; display:flex; flex-direction:column;
+  justify-content:center; gap:5%; }
+.R .rc .stl { font-size:133%; font-weight:700; letter-spacing:.18em; color:var(--black); }
+.R .rc .bw { font-family:var(--disp); font-size:1333%;
+  color:var(--black); text-transform:uppercase; letter-spacing:-.02em; line-height:.85; }
+.R .rc .contact { display:flex; flex-direction:column; gap:2%; margin-top:3%; }
+.R .rc .contact span { font-size:160%; font-weight:700; letter-spacing:.05em; color:var(--black); }
+</style>
+</head>
+<body>
+
+<div id="app-hdr">
+  <h1>creative-brief-agency — All 18 Layouts Demo</h1>
+  <small>16:9 · #0F0F0F × #C6F53D · Impact · 18 pages from original.pdf</small>
+</div>
+
+<div id="tabs">
+  <button class="active" onclick="show(0)">A · Cover</button>
+  <button onclick="show(1)">B · Agenda</button>
+  <button onclick="show(2)">C · SectionIntroA</button>
+  <button onclick="show(3)">D · SectionIntroB</button>
+  <button onclick="show(4)">E · ContentSplit</button>
+  <button onclick="show(5)">F · AboutBrand</button>
+  <button onclick="show(6)">G · BriefHistory</button>
+  <button onclick="show(7)">H · TargetAudience</button>
+  <button onclick="show(8)">I · References</button>
+  <button onclick="show(9)">J · PhotoMoodboard</button>
+  <button onclick="show(10)">K · TwoColPhotoLime</button>
+  <button onclick="show(11)">L · Competitors</button>
+  <button onclick="show(12)">M · ChartSplit</button>
+  <button onclick="show(13)">N · RiskTable</button>
+  <button onclick="show(14)">O · Deliverables</button>
+  <button onclick="show(15)">P · Timeline</button>
+  <button onclick="show(16)">Q · OurTeam</button>
+  <button onclick="show(17)">R · ThankYou</button>
+</div>
+
+<div id="slide-area">
+
+<!-- A · COVER -->
+<div class="page A active" id="s0">
+  <div class="hdr">
+    <span>STUDIO SHODWE</span><span>JANUARY 2025</span><span>WWW.REALLYGREATSITE.COM</span>
+  </div>
+  <div class="title"><span>CREATIVE</span><span>BRIEF</span></div>
+  <div class="photo"><div class="ph">Team Photo</div></div>
+  <div class="footer">
+    <div class="pb"><span class="lbl">PRESENTED BY :</span><span class="val">Morgan Maxwell</span></div>
+    <div class="pb"><span class="lbl">PRESENTED TO :</span><span class="val">Marketing Team</span></div>
+  </div>
+</div>
+
+<!-- B · AGENDA -->
+<div class="page B" id="s1">
+  <div class="cl"><span class="stl">STUDIO SHODWE</span><span class="aw">AGENDA</span></div>
+  <div class="cm"><div class="ph">Interior Photo</div></div>
+  <div class="cr">
+    <div class="mi"><span class="mt">01. Campaign</span><span class="ma">↘</span></div>
+    <div class="mi"><span class="mt">02. Target Audience</span><span class="ma">↘</span></div>
+    <div class="mi"><span class="mt">03. References</span><span class="ma">↘</span></div>
+    <div class="mi"><span class="mt">04. Deliverables</span><span class="ma">↘</span></div>
+    <div class="mi"><span class="mt">05. Contact Us</span><span class="ma">↘</span></div>
+  </div>
+</div>
+
+<!-- C · SECTION INTRO A -->
+<div class="page C" id="s2">
+  <div class="tp"><div class="ph">Team Working Photo (full width, split 2-up)</div></div>
+  <div class="ll">INTRODUCTION</div>
+  <div class="bb"><span>WE ARE A PROFESSIONAL</span><span>DESIGN STUDIO</span></div>
+  <div class="rp"><div class="ph">Team Sofa Photo</div></div>
+</div>
+
+<!-- D · SECTION INTRO B -->
+<div class="page D" id="s3">
+  <div class="lp"><div class="ph">Portrait Photo (left, full height)</div></div>
+  <div class="lime-top">STUDIO SHODWE</div>
+  <div class="impact"><span>INTRODUCTION</span></div>
+  <div class="body-block">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+  </div>
+</div>
+
+<!-- E · CONTENT SPLIT 3-COL -->
+<div class="page E" id="s4">
+  <div class="stag">THE CAMPAIGN</div>
+  <div class="hd">ABOUT THE CAMPAIGN</div>
+  <div class="cols">
+    <div class="col">
+      <div class="lime-bar"><div class="ct">Keep Things on Track</div></div>
+      <p class="col-body">This is it! Time to introduce the campaign. This is where you set the tone of your entire brief. Give your team history into the background of the campaign.</p>
+    </div>
+    <div class="col col-mid"><div class="ph" style="height:100%">Campaign Photo</div></div>
+    <div class="col">
+      <div class="lime-bar"><div class="ct">Introduce the Campaign</div></div>
+      <p class="col-body">Creativity can be a lot of chaotic, messy fun. Briefs are here to keep creatives on track, while kickstarting the creative process. Balance specificity with creative freedom.</p>
+    </div>
+  </div>
+</div>
+
+<!-- F · ABOUT BRAND -->
+<div class="page F" id="s5">
+  <div class="lp"><div class="ph">Portrait Photo (full height)</div></div>
+  <div class="mc">
+    <span class="stl">STUDIO SHODWE</span>
+    <span class="bw">ABOUT THE BRAND</span>
+  </div>
+  <div class="rt-top">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+  </div>
+  <div class="rt-bot"><div class="ph">Team Working Photo</div></div>
+</div>
+
+<!-- G · BRIEF HISTORY COLLAGE -->
+<div class="page G" id="s6">
+  <div class="tl"><span class="bw">A BRIEF HISTORY</span></div>
+  <div class="tc"><div class="ph">Team Writing Photo</div></div>
+  <div class="tr">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+  </div>
+  <div class="bl">
+    <p>Giving some background information into the history behind the brand and what their vision is, is crucial when introducing a brief. What does the brand believe in? Spark that fire within your creatives.</p>
+  </div>
+  <div class="br"><div class="ph">Team Sofa Photo</div></div>
+</div>
+
+<!-- H · TARGET AUDIENCE -->
+<div class="page H" id="s7">
+  <span class="lbl">THE CAMPAIGN</span>
+  <div class="bw">TARGET<br>AUDIENCE</div>
+  <div class="rp"><div class="ph">Youth Group Photo (top-right)</div></div>
+  <div class="lime-bar">
+    <div class="ht">Youth with Social Media Awareness</div>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+  </div>
+</div>
+
+<!-- I · REFERENCES -->
+<div class="page I" id="s8">
+  <div class="tp">
+    <div class="ph" style="height:100%">Full-width photo (laptop team)</div>
+    <div class="ot">Some great things to inspire creatives.</div>
+  </div>
+  <div class="bl"><span>REFERENCES</span></div>
+  <div class="br">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+  </div>
+</div>
+
+<!-- J · PHOTO MOODBOARD -->
+<div class="page J" id="s9">
+  <div class="grid">
+    <div class="col" style="display:flex;flex-direction:column;gap:2%;flex:1">
+      <div class="card" style="flex:1">
+        <div class="img"><div class="ph">Youth Group Photo</div></div>
+        <div class="cap">A group of youngsters having a blast on their social feeds!</div>
+      </div>
+      <div class="card" style="flex:1">
+        <div class="img"><div class="ph">Youth Walking Photo</div></div>
+        <div class="cap">Love this photograph angle. Would be great to see the brand with this kind of photograph</div>
+      </div>
+    </div>
+    <div class="card tall" style="flex:1">
+      <div class="img" style="flex:1"><div class="ph">Fashion Group Photo (tall)</div></div>
+      <div class="cap">This elegant and minimal color palette is so great for outdoor photograph</div>
+    </div>
+    <div class="card tall" style="flex:1">
+      <div class="img" style="flex:1"><div class="ph">Craft / Hands Photo (tall)</div></div>
+      <div class="cap">Don't forget to bring on the process like this one</div>
+    </div>
+  </div>
+  <span class="footer-lbl">STUDIO SHODWE</span>
+</div>
+
+<!-- K · TWO-COL PHOTO LIME -->
+<div class="page K" id="s10">
+  <div class="lp">
+    <div class="photo-wrap"><div class="ph">Laptop Team (portrait crop)</div></div>
+  </div>
+  <div class="rp">
+    <span class="stl">STUDIO SHODWE</span>
+    <div class="embedded"><div class="ph">Team Sofa Photo (embedded)</div></div>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+  </div>
+</div>
+
+<!-- L · COMPETITORS -->
+<div class="page L" id="s11">
+  <div class="lc">
+    <span class="stl">STUDIO SHODWE</span>
+    <div class="pic"><div class="ph">Portrait at Desk</div></div>
+    <span class="bw">COMPETITORS</span>
+  </div>
+  <div class="rc">
+    <div class="card">
+      <div class="ch">Competitors 01</div>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+    </div>
+    <div class="card">
+      <div class="ch">Competitors 02</div>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+    </div>
+  </div>
+</div>
+
+<!-- M · CHART SPLIT -->
+<div class="page M" id="s12">
+  <div class="y-labels">
+    <span>20</span><span>15</span><span>10</span><span>5</span><span>0</span>
+  </div>
+  <div class="chart-area">
+    <div class="chart-bars">
+      <div class="bar-group">
+        <div class="bar lime" style="height:40%"></div>
+        <div class="bar blue" style="height:26%"></div>
+        <div class="bar white" style="height:16%"></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar lime" style="height:52%"></div>
+        <div class="bar blue" style="height:21%"></div>
+        <div class="bar white" style="height:37%"></div>
+      </div>
+      <div class="bar-group">
+        <div class="bar lime" style="height:97%"></div>
+        <div class="bar blue" style="height:58%"></div>
+        <div class="bar white" style="height:47%"></div>
+      </div>
+    </div>
+    <div class="chart-labels">
+      <span>Competitor 1</span><span>Competitor 2</span><span>Competitor 3</span>
+    </div>
+  </div>
+  <div class="rc">
+    <span class="bw">COMPETITORS</span>
+    <p>Presentations are communication tools that can be used as demonstrations, lectures, speeches, reports, and more. It is mostly presented before an audience.</p>
+    <div class="pic"><div class="ph">Meeting Photo</div></div>
+  </div>
+  <div class="line-h l1"></div>
+</div>
+
+<!-- N · RISK TABLE -->
+<div class="page N" id="s13">
+  <div class="bw">RISK<br>IDENTIFICATION</div>
+  <div class="pic"><div class="ph">Team Photo</div></div>
+  <table>
+    <thead>
+      <tr><td>No</td><td>Risk</td><td>Management</td><td>PIC</td></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Risk 01</td><td>Presentations are communication tools that can be used as demonstrations, lectures, speeches, reports, and more.</td><td>Pedro Fernandes</td></tr>
+      <tr><td>2</td><td>Risk 01</td><td>Presentations are communication tools that can be used as demonstrations, lectures, speeches, reports, and more.</td><td>Sacha Dubois</td></tr>
+      <tr><td>3</td><td>Risk 01</td><td>Presentations are communication tools that can be used as demonstrations, lectures, speeches, reports, and more.</td><td>Murad Naser</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- O · DELIVERABLES -->
+<div class="page O" id="s14">
+  <div class="top">
+    <div class="card">
+      <div class="lime-hd">Social Media Campaign</div>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+    </div>
+    <div class="card">
+      <div class="lime-hd">PR Rollout</div>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+    </div>
+    <div class="card">
+      <div class="lime-hd">Tvc</div>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+    </div>
+  </div>
+  <div class="bottom">
+    <div class="ph">Phone / Mobile Photo (full width)</div>
+    <div class="bw">DELIVERABLES</div>
+  </div>
+</div>
+
+<!-- P · TIMELINE -->
+<div class="page P" id="s15">
+  <div class="ph1">
+    <div class="phase-box">Phase 1</div>
+    <div class="phase-lbl">JANUARY 2025</div>
+    <div class="phase-body">Write an observational timeline. An observational timeline can be a powerful tool for gaining insights.</div>
+  </div>
+  <div class="ph2">
+    <div class="phase-box">Phase 2</div>
+    <div class="phase-lbl">FEBRUARY 2025</div>
+    <div class="phase-body">Write an observational timeline. An observational timeline can be a powerful tool for gaining insights.</div>
+  </div>
+  <div class="ph3">
+    <div class="phase-box">Phase 3</div>
+    <div class="phase-lbl">MARCH 2025</div>
+    <div class="phase-body" style="width:150%">Write an observational timeline. An observational timeline can be a powerful tool for gaining insights.</div>
+  </div>
+  <div class="ph4">
+    <div class="phase-box">Phase 4</div>
+    <div class="phase-lbl">APRIL 2025</div>
+    <div class="phase-body" style="width:150%">Write an observational timeline. An observational timeline can be a powerful tool for gaining insights.</div>
+  </div>
+  <div class="bw">TIMELINE</div>
+  <div class="pic1"><div class="ph">Team Portrait</div></div>
+  <div class="pic2"><div class="ph">Room Photo</div></div>
+  <div class="line-h l1"></div>
+  <div class="line-v l2"></div>
+  <div class="line-h l3"></div>
+  <div class="line-h l4"></div>
+</div>
+
+<!-- Q · OUR TEAM -->
+<div class="page Q" id="s16">
+  <div class="lime-strip">
+    <span class="vt">OUR TEAM</span>
+  </div>
+  <div class="photos">
+    <div class="col-ph"><div class="ph">Alfredo Portrait</div></div>
+    <div class="col-ph"><div class="ph">Harumi Portrait</div></div>
+    <div class="col-ph"><div class="ph">Juliana Portrait</div></div>
+  </div>
+  <div class="name-bar">
+    <div style="width:10%"></div>
+    <div class="nm">
+      <span class="name">Alfredo Torres</span>
+      <span class="role">Production Manager</span>
+    </div>
+    <div class="nm">
+      <span class="name">Harumi Kabayashi</span>
+      <span class="role">Marketing Manager</span>
+    </div>
+    <div class="nm">
+      <span class="name">Juliana Silva</span>
+      <span class="role">Product Quality Control</span>
+    </div>
+  </div>
+</div>
+
+<!-- R · THANK YOU -->
+<div class="page R" id="s17">
+  <div class="lp"><div class="ph">Couple Working Photo</div></div>
+  <div class="rc">
+    <span class="stl">STUDIO SHODWE</span>
+    <span class="bw">THANK YOU</span>
+    <div class="contact">
+      <span>PHONE: 123-456-7890</span>
+      <span>EMAIL: HELLO@REALLYGREATSITE.COM</span>
+      <span>123 ANYWHERE ST, ANY CITY</span>
+    </div>
+  </div>
+</div>
+
+</div>
+<div id="kbd-hint">← → Arrow keys to navigate · 18 layouts total</div>
+
+<script>
+const slides = document.querySelectorAll('.page');
+const btns   = document.querySelectorAll('#tabs button');
+let cur = 0;
+function show(n) {
+  slides[cur].classList.remove('active');
+  btns[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+  btns[cur].classList.add('active');
+  slides[cur].scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight'||e.key==='ArrowDown') show(cur+1);
+  if (e.key==='ArrowLeft' ||e.key==='ArrowUp')   show(cur-1);
+});
+</script>
+</body>
+</html>

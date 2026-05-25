@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>SAP AppHaus 模板 — 全版型示範 v1.1</title>
+  <style>
+    /* ============================================================
+       SAP AppHaus 設計系統 CSS — v1.1 / 2026-05-09
+       來源：core-layouts/sap-apphaus/sample-pages/slide-01~16.png
+       拆解：基於實際 PNG 視覺（不依賴 analysis.md 文字描述）
+       畫布：13.333" × 7.5" → 1280 × 720 px → aspect-ratio 16/9
+       中文字型：Microsoft YaHei UI（Jimmy 全域指定）
+       ============================================================ */
+    :root {
+      /* 7 個 Opportunity 色（dual-tone：dark 作底，light 作 accent）*/
+      --sap-purple-dark: #2B2475; --sap-purple-light: #9D91C6;
+      --sap-blue-dark: #14398F;   --sap-blue-light: #5596E5;
+      --sap-magenta-dark: #761849;--sap-magenta-light: #E04A93;
+      --sap-green-dark: #10462C;  --sap-green-light: #24A85C;
+      --sap-red-dark: #5A0E20;    --sap-red-light: #DE4852;
+      --sap-teal-dark: #0D4850;   --sap-teal-light: #1DA5AB;
+      --sap-orange-dark: #591709; --sap-orange-light: #E6763A;
+      /* 中性色 */
+      --sap-paper: #E8ECEF;
+      --sap-ink-dark: #122D4A;
+      --sap-ink: #2B3A4E;
+      --sap-ink-soft: #6B7C93;
+      --sap-band-light: #A8B4C2;
+      --sap-band-mid: #5B7C99;
+      --sap-kvalley: #C4D600;
+    }
+
+    /* 主題變體（套在 .slide 上）*/
+    .theme-purple  { --theme-dark: var(--sap-purple-dark);  --theme-light: var(--sap-purple-light); }
+    .theme-blue    { --theme-dark: var(--sap-blue-dark);    --theme-light: var(--sap-blue-light); }
+    .theme-magenta { --theme-dark: var(--sap-magenta-dark); --theme-light: var(--sap-magenta-light); }
+    .theme-green   { --theme-dark: var(--sap-green-dark);   --theme-light: var(--sap-green-light); }
+    .theme-red     { --theme-dark: var(--sap-red-dark);     --theme-light: var(--sap-red-light); }
+    .theme-teal    { --theme-dark: var(--sap-teal-dark);    --theme-light: var(--sap-teal-light); }
+    .theme-orange  { --theme-dark: var(--sap-orange-dark);  --theme-light: var(--sap-orange-light); }
+    .theme-ink     { --theme-dark: var(--sap-ink-dark);     --theme-light: var(--sap-band-mid); }
+
+    /* ============ Demo 頁面外殼 ============ */
+    body {
+      margin: 0; padding: 24px;
+      background: #1a1a1a; color: white;
+      font-family: 'Microsoft YaHei UI', 'PingFang TC', 'Noto Sans TC', system-ui, -apple-system, sans-serif;
+    }
+    h1.demo-title { text-align: center; color: #ddd; font-weight: 300; margin: 0 0 6px 0; font-size: 24px; }
+    p.demo-sub { text-align: center; color: #888; font-size: 13px; margin: 0 0 20px 0; }
+    .nav { position: sticky; top: 0; background: #1a1a1a; padding: 12px 0; border-bottom: 1px solid #333; margin-bottom: 24px; z-index: 10; text-align: center; }
+    .nav a { color: #ccc; text-decoration: none; margin: 0 6px; padding: 6px 14px; border: 1px solid #444; border-radius: 4px; font-size: 13px; display: inline-block; }
+    .nav a:hover { background: #333; }
+    .slide-label { color: #aaa; font-size: 12px; margin: 28px 0 8px 0; text-transform: uppercase; letter-spacing: 2px; text-align: center; }
+
+    /* ============ 共用 .slide 容器（13.333:7.5）============ */
+    .slide {
+      width: min(95vw, 1280px);
+      aspect-ratio: 16 / 9;
+      margin: 0 auto 32px auto;
+      position: relative; overflow: hidden;
+      background: white;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    /* ============================================================
+       Layout A：全集封面（cover-fullset）
+       對應 slide-01 — 整套課程入口
+       ============================================================ */
+    .slide-cover-fullset { background: var(--sap-paper); }
+
+    .slide-cover-fullset .band-top,
+    .slide-cover-fullset .band-bottom {
+      position: absolute; left: 0; width: 100%; height: 7.5%;
+    }
+    .slide-cover-fullset .band-top { top: 0; }
+    .slide-cover-fullset .band-bottom { bottom: 0; }
+    .slide-cover-fullset .band-top svg,
+    .slide-cover-fullset .band-bottom svg {
+      width: 100%; height: 100%; display: block;
+    }
+
+    .slide-cover-fullset .cover-content {
+      position: absolute;
+      top: 28%; left: 9%; right: 9%;
+    }
+    .slide-cover-fullset .cover-eyebrow {
+      font-size: clamp(0.95rem, 1.4vw, 1.4rem);
+      color: var(--sap-ink-dark);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.8em;
+    }
+    .slide-cover-fullset .cover-title {
+      font-size: clamp(3.5rem, 7vw, 6.5rem);
+      font-weight: 900;
+      color: var(--sap-ink-dark);
+      line-height: 1.0;
+      letter-spacing: -0.015em;
+      margin-bottom: 0.5em;
+    }
+    .slide-cover-fullset .cover-cta {
+      display: inline-block;
+      background: var(--sap-band-mid);
+      color: white;
+      padding: 0.55em 1.5em;
+      font-size: clamp(1.05rem, 1.6vw, 1.45rem);
+      font-weight: 600;
+    }
+    .slide-cover-fullset .cover-credit {
+      position: absolute;
+      bottom: 11.5%; left: 9%;
+      font-size: clamp(0.8rem, 1.05vw, 1rem);
+      color: var(--sap-ink-soft);
+    }
+    .slide-cover-fullset .cover-credit b { color: var(--sap-ink-dark); font-weight: 700; }
+    .slide-cover-fullset .cover-logo-slot {
+      position: absolute;
+      bottom: 11%; right: 9%;
+      font-size: clamp(0.65rem, 0.85vw, 0.85rem);
+      color: var(--sap-ink-soft);
+      font-weight: bold;
+      border: 1px dashed var(--sap-ink-soft);
+      padding: 4px 14px;
+      letter-spacing: 0.15em;
+    }
+
+    /* ============================================================
+       Layout B：章節封面（chapter-cover）
+       對應 slide-03/05/07... — 進入某 Opportunity 章節
+       關鍵：頂底各 3 個三角橫列（不是四角對稱）
+       ============================================================ */
+    .slide-chapter-cover {
+      background: var(--theme-dark);
+      color: white;
+    }
+    .slide-chapter-cover .tri-row-top,
+    .slide-chapter-cover .tri-row-bottom {
+      position: absolute; left: 0; width: 100%;
+      height: 22%;
+    }
+    .slide-chapter-cover .tri-row-top { top: 0; }
+    .slide-chapter-cover .tri-row-bottom { bottom: 0; }
+    .slide-chapter-cover .tri-row-top svg,
+    .slide-chapter-cover .tri-row-bottom svg {
+      width: 100%; height: 100%; display: block;
+    }
+
+    .slide-chapter-cover .chapter-content {
+      position: absolute;
+      top: 32%; left: 9%; right: 9%;
+    }
+    .slide-chapter-cover .chapter-eyebrow {
+      font-size: clamp(0.9rem, 1.25vw, 1.2rem);
+      color: var(--theme-light);
+      letter-spacing: 0.18em;
+      font-weight: 600;
+      margin-bottom: 1.2em;
+    }
+    .slide-chapter-cover .chapter-title {
+      font-size: clamp(3rem, 6.8vw, 6.2rem);
+      font-weight: 900;
+      color: white;
+      line-height: 1.0;
+      letter-spacing: -0.015em;
+    }
+    .slide-chapter-cover .chapter-credit {
+      position: absolute;
+      bottom: 4%; left: 9%;
+      font-size: clamp(0.7rem, 0.9vw, 0.9rem);
+      color: rgba(255,255,255,0.75);
+    }
+    .slide-chapter-cover .chapter-logo-slot {
+      position: absolute;
+      bottom: 4%; right: 9%;
+      font-size: clamp(0.6rem, 0.8vw, 0.8rem);
+      color: rgba(255,255,255,0.85);
+      font-weight: bold;
+      border: 1px dashed rgba(255,255,255,0.5);
+      padding: 3px 12px;
+      letter-spacing: 0.15em;
+    }
+
+    /* ============================================================
+       Layout C：Introduction（雙欄純文字）
+       對應 slide-02 — 開場 / 介紹
+       ============================================================ */
+    .slide-intro {
+      background: white;
+      padding: 9% 9%;
+      box-sizing: border-box;
+    }
+    .slide-intro .intro-eyebrow {
+      font-size: clamp(0.7rem, 0.85vw, 0.9rem);
+      color: var(--sap-ink-soft);
+      letter-spacing: 0.18em;
+      margin-bottom: 2.2em;
+      font-weight: 600;
+    }
+    .slide-intro .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5%;
+    }
+    .slide-intro .intro-grid p {
+      font-size: clamp(0.95rem, 1.4vw, 1.35rem);
+      line-height: 1.55;
+      color: var(--sap-ink);
+      margin: 0 0 1em 0;
+    }
+    .slide-intro .intro-grid b {
+      color: var(--sap-ink-dark);
+      font-weight: 700;
+    }
+    .slide-intro .intro-logo-slot {
+      position: absolute;
+      bottom: 6%; right: 6%;
+      font-size: clamp(0.6rem, 0.8vw, 0.8rem);
+      color: var(--sap-ink-soft);
+      font-weight: bold;
+      border: 1px dashed var(--sap-ink-soft);
+      padding: 3px 12px;
+      letter-spacing: 0.15em;
+    }
+
+    /* ============================================================
+       Layout D：Detail（主 65% + 彩色側欄 35%）
+       對應 slide-04/06... — 內容頁
+       ============================================================ */
+    .slide-detail {
+      display: flex;
+      background: white;
+    }
+    .slide-detail .detail-main {
+      flex: 65;
+      padding: 6% 4% 6% 7%;
+      box-sizing: border-box;
+    }
+    .slide-detail .detail-sidebar {
+      flex: 35;
+      background: var(--theme-dark);
+      color: white;
+      padding: 6% 5%;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .slide-detail .detail-eyebrow {
+      font-size: clamp(0.65rem, 0.85vw, 0.85rem);
+      color: var(--theme-dark);
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      margin-bottom: 0.4em;
+    }
+    .slide-detail .detail-subtitle {
+      font-size: clamp(0.85rem, 1.05vw, 1.05rem);
+      color: var(--sap-ink-soft);
+      margin-bottom: 1.6em;
+      line-height: 1.4;
+    }
+    .slide-detail .detail-body {
+      font-size: clamp(0.85rem, 1.1vw, 1.15rem);
+      line-height: 1.55;
+      color: var(--sap-ink);
+      margin: 0 0 1em 0;
+    }
+    .slide-detail .detail-body b {
+      color: var(--sap-ink-dark);
+      font-weight: 700;
+    }
+    .slide-detail .detail-list {
+      list-style: none; padding: 0;
+      margin: 0 0 1.4em 0;
+      font-size: clamp(0.8rem, 1.05vw, 1.05rem);
+      line-height: 1.7;
+      color: var(--sap-ink);
+    }
+    .slide-detail .detail-list li {
+      padding-left: 1em;
+      position: relative;
+    }
+    .slide-detail .detail-list li::before {
+      content: "•"; color: var(--theme-dark);
+      position: absolute; left: 0;
+      font-weight: 700;
+    }
+    .slide-detail .detail-question {
+      font-size: clamp(1rem, 1.5vw, 1.45rem);
+      font-weight: 700;
+      color: var(--sap-ink-dark);
+      line-height: 1.4;
+    }
+    .slide-detail .sidebar-title {
+      font-size: clamp(0.7rem, 0.95vw, 0.95rem);
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      margin-bottom: 0.4em;
+    }
+    .slide-detail .sidebar-sub {
+      font-size: clamp(0.7rem, 0.9vw, 0.9rem);
+      opacity: 0.85;
+      margin-bottom: 1.6em;
+      line-height: 1.4;
+    }
+    .slide-detail .case {
+      margin-bottom: 1.1em;
+    }
+    .slide-detail .case-tag {
+      display: inline-block;
+      background: white;
+      color: var(--theme-dark);
+      font-size: clamp(0.65rem, 0.85vw, 0.85rem);
+      font-weight: 700;
+      padding: 3px 10px;
+      margin-bottom: 0.4em;
+    }
+    .slide-detail .case-text {
+      font-size: clamp(0.72rem, 0.95vw, 0.95rem);
+      line-height: 1.45;
+    }
+    .slide-detail .sidebar-logo-slot {
+      position: absolute;
+      bottom: 5%; right: 6%;
+      font-size: clamp(0.55rem, 0.75vw, 0.75rem);
+      color: rgba(255,255,255,0.8);
+      font-weight: bold;
+      border: 1px dashed rgba(255,255,255,0.5);
+      padding: 2px 8px;
+      letter-spacing: 0.15em;
+    }
+
+    /* ============================================================
+       Layout E：衝擊頁 / 收斂金句（impact-quote）
+       對應 SAP 衝擊頁 — 大字金句配深色底
+       ============================================================ */
+    .slide-impact {
+      background: var(--theme-dark);
+      color: white;
+    }
+    .slide-impact .tri-row-top,
+    .slide-impact .tri-row-bottom {
+      position: absolute; left: 0; width: 100%; height: 18%;
+    }
+    .slide-impact .tri-row-top { top: 0; }
+    .slide-impact .tri-row-bottom { bottom: 0; }
+    .slide-impact .tri-row-top svg,
+    .slide-impact .tri-row-bottom svg {
+      width: 100%; height: 100%; display: block;
+    }
+    .slide-impact .impact-content {
+      position: absolute;
+      top: 32%; left: 9%; right: 9%;
+    }
+    .slide-impact .impact-eyebrow {
+      font-size: clamp(0.85rem, 1.15vw, 1.15rem);
+      color: var(--theme-light);
+      letter-spacing: 0.22em;
+      font-weight: 600;
+      margin-bottom: 1em;
+    }
+    .slide-impact .impact-quote {
+      font-size: clamp(3rem, 7.2vw, 6.8rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.018em;
+    }
+    .slide-impact .impact-quote .accent { color: var(--theme-light); }
+
+    /* ============ 列印支援 ============ */
+    @media print {
+      body { background: white; padding: 0; }
+      .slide { page-break-after: always; box-shadow: none; margin: 0; width: 100%; }
+      .nav, .slide-label, h1.demo-title, p.demo-sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<h1 class="demo-title">SAP AppHaus 模板 — 全版型示範</h1>
+<p class="demo-sub">v1.1 拆解 · 2026-05-09 · 內容用 kv 案「與 AI Agent 共舞」當示範 · 5 種版型對應 slide-01~04+衝擊頁</p>
+
+<div class="nav">
+  <a href="#A">A · 全集封面</a>
+  <a href="#B">B · 章節封面</a>
+  <a href="#C">C · Introduction</a>
+  <a href="#D">D · Detail（主+側）</a>
+  <a href="#E">E · 衝擊頁</a>
+</div>
+
+<!-- ============================================================
+     Layout A：全集封面（slide-01 對應）
+     ============================================================ -->
+<p class="slide-label" id="A">A · 全集封面 — 整套課程入口</p>
+<section class="slide slide-cover-fullset">
+  <!-- 頂部 navy 色帶（3 段，diagonal cuts）-->
+  <div class="band-top">
+    <svg viewBox="0 0 1280 56" preserveAspectRatio="none">
+      <!-- 段 1：左淺藍灰大區 -->
+      <polygon points="0,0 360,0 312,56 0,56" fill="#A8B4C2" />
+      <!-- 段 2：中段深藍 -->
+      <polygon points="312,56 360,0 760,0 712,56" fill="#1B2D4A" />
+      <!-- 段 3：小三角過場（淺藍）-->
+      <polygon points="712,56 760,0 800,0 752,56" fill="#5B7C99" />
+      <!-- 段 4：右側深藍長條 -->
+      <polygon points="752,56 800,0 1280,0 1280,56" fill="#1B2D4A" />
+    </svg>
+  </div>
+  <!-- 底部 navy 色帶（鏡像）-->
+  <div class="band-bottom">
+    <svg viewBox="0 0 1280 56" preserveAspectRatio="none">
+      <polygon points="0,0 312,0 360,56 0,56" fill="#A8B4C2" />
+      <polygon points="360,56 312,0 712,0 760,56" fill="#1B2D4A" />
+      <polygon points="760,56 712,0 752,0 800,56" fill="#5B7C99" />
+      <polygon points="800,56 752,0 1280,0 1280,56" fill="#1B2D4A" />
+    </svg>
+  </div>
+
+  <div class="cover-content">
+    <div class="cover-eyebrow">KV TEAM 培訓 · 2026</div>
+    <div class="cover-title">與 AI Agent<br>共舞</div>
+    <div style="margin-top: 0.4em;">
+      <span class="cover-cta">讓 Claude Code 替你工作</span>
+    </div>
+  </div>
+  <div class="cover-credit">Created by · <b>智谷網絡 Kvalley</b></div>
+  <div class="cover-logo-slot">KV LOGO</div>
+</section>
+
+<!-- ============================================================
+     Layout B：章節封面（slide-03 對應 / 紫色主題）
+     關鍵：頂底各 3 個三角橫列（不是四角對稱！）
+     ============================================================ -->
+<p class="slide-label" id="B">B · 章節封面 — 進入某 Opportunity（紫色主題）</p>
+<section class="slide slide-chapter-cover theme-purple">
+  <!-- 頂部三角列：3 組 dual-tone 三角 -->
+  <div class="tri-row-top">
+    <svg viewBox="0 0 1280 158" preserveAspectRatio="none">
+      <!-- 整列底色為 light（淺紫）-->
+      <rect x="0" y="0" width="1280" height="158" fill="var(--theme-light)" />
+      <!-- 3 個 dark 三角（深紫，向下指）-->
+      <polygon points="0,0 320,0 0,158" fill="var(--theme-dark)" />
+      <polygon points="430,0 750,0 430,158" fill="var(--theme-dark)" />
+      <polygon points="860,0 1180,0 860,158" fill="var(--theme-dark)" />
+      <!-- 三角邊緣加 light 過渡：留尖端 -->
+      <polygon points="320,0 430,0 320,158" fill="var(--theme-dark)" opacity="0.6" />
+      <polygon points="750,0 860,0 750,158" fill="var(--theme-dark)" opacity="0.6" />
+      <polygon points="1180,0 1280,0 1180,158" fill="var(--theme-dark)" opacity="0.6" />
+    </svg>
+  </div>
+  <!-- 底部三角列（向上指，鏡像）-->
+  <div class="tri-row-bottom">
+    <svg viewBox="0 0 1280 158" preserveAspectRatio="none">
+      <rect x="0" y="0" width="1280" height="158" fill="var(--theme-light)" />
+      <polygon points="0,158 320,158 0,0" fill="var(--theme-dark)" />
+      <polygon points="430,158 750,158 430,0" fill="var(--theme-dark)" />
+      <polygon points="860,158 1180,158 860,0" fill="var(--theme-dark)" />
+      <polygon points="320,158 430,158 320,0" fill="var(--theme-dark)" opacity="0.6" />
+      <polygon points="750,158 860,158 750,0" fill="var(--theme-dark)" opacity="0.6" />
+      <polygon points="1180,158 1280,158 1180,0" fill="var(--theme-dark)" opacity="0.6" />
+    </svg>
+  </div>
+
+  <div class="chapter-content">
+    <div class="chapter-eyebrow">OPPORTUNITY · 1</div>
+    <div class="chapter-title">心態轉換<br>你是主管，<br>不是操作員</div>
+  </div>
+  <div class="chapter-credit">與 AI Agent 共舞 · Chapter 1</div>
+  <div class="chapter-logo-slot">KV LOGO</div>
+</section>
+
+<!-- ============================================================
+     Layout C：Introduction（slide-02 對應）
+     ============================================================ -->
+<p class="slide-label" id="C">C · Introduction — 雙欄純文字開場</p>
+<section class="slide slide-intro">
+  <div class="intro-eyebrow">INTRODUCTION</div>
+  <div class="intro-grid">
+    <div>
+      <p>這套課不是教你「Claude Code 怎麼用」。是教你<b>怎麼讓 AI 替你工作</b>——把你從<b>操作員</b>升級成<b>主管</b>。</p>
+      <p>過去一年，AI 從「玩具」變成「員工」。會用的人產出爆增 5-10 倍，不會用的人還在自己查資料、自己寫文件。差距會持續拉開。</p>
+    </div>
+    <div>
+      <p>智谷的同仁人均已配 Claude Code Pro，但<b>大部分人只用了 5%</b>。問題不在工具，在<b>心態</b>——你還用「自己做事順便問 AI」的方式，不是「下指令讓 AI 做事自己審核」。</p>
+      <p>這套課帶你完成這個切換。三章節：<b>心態轉換 → 提問框架 → 實戰練習</b>。學完後，你會發現過去一週的工作量，AI 兩小時就能做完。</p>
+    </div>
+  </div>
+  <div class="intro-logo-slot">KV LOGO</div>
+</section>
+
+<!-- ============================================================
+     Layout D：Detail 主 65% + 側欄 35%（slide-04 對應 / 紫色主題）
+     ============================================================ -->
+<p class="slide-label" id="D">D · Detail — 主內容 + 側欄案例（紫色主題）</p>
+<section class="slide slide-detail theme-purple">
+  <div class="detail-main">
+    <div class="detail-eyebrow">CORE MINDSET</div>
+    <div class="detail-subtitle">心態轉換 / Mindset Shift</div>
+    <p class="detail-body">真正能用好 AI 的人，<b>把自己當主管，不是操作員</b>。你的價值在<b>判斷</b>跟<b>決策</b>，不在執行。</p>
+    <p class="detail-body">能讓 AI 做的事，<b>絕對不要自己動手</b>：</p>
+    <ul class="detail-list">
+      <li>「你去查 [主題]」— 取代自己 Google</li>
+      <li>「你去裝 [工具]」— 取代自己看安裝文件</li>
+      <li>「你去研究 [選項]」— 取代自己讀比較文章</li>
+    </ul>
+    <p class="detail-question">這週你還有哪些工作，<br>是 AI 可以替你做但你還在自己做的？</p>
+  </div>
+  <div class="detail-sidebar">
+    <div class="sidebar-title">EXAMPLE MOVES</div>
+    <div class="sidebar-sub">把這三句話掛在嘴邊，立刻換腦袋。</div>
+
+    <div class="case">
+      <div class="case-tag">指派</div>
+      <div class="case-text">「你去查 SAP S/4HANA 跟 Oracle ERP 的核心差異，列 5 點。」</div>
+    </div>
+    <div class="case">
+      <div class="case-tag">委任</div>
+      <div class="case-text">「你去裝 Playwright，設好我的測試環境。」</div>
+    </div>
+    <div class="case">
+      <div class="case-tag">要求觀點</div>
+      <div class="case-text">「你去研究 3 種雲端方案，告訴我推哪個、為什麼。」</div>
+    </div>
+
+    <div class="sidebar-logo-slot">KV</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     Layout E：衝擊頁 / 金句（深藍主題 ink）
+     ============================================================ -->
+<p class="slide-label" id="E">E · 衝擊頁 — 收斂金句（深藍主題）</p>
+<section class="slide slide-impact theme-ink">
+  <div class="tri-row-top">
+    <svg viewBox="0 0 1280 130" preserveAspectRatio="none">
+      <rect x="0" y="0" width="1280" height="130" fill="var(--theme-light)" />
+      <polygon points="0,0 320,0 0,130" fill="var(--theme-dark)" />
+      <polygon points="430,0 750,0 430,130" fill="var(--theme-dark)" />
+      <polygon points="860,0 1180,0 860,130" fill="var(--theme-dark)" />
+    </svg>
+  </div>
+  <div class="tri-row-bottom">
+    <svg viewBox="0 0 1280 130" preserveAspectRatio="none">
+      <rect x="0" y="0" width="1280" height="130" fill="var(--theme-light)" />
+      <polygon points="0,130 320,130 0,0" fill="var(--theme-dark)" />
+      <polygon points="430,130 750,130 430,0" fill="var(--theme-dark)" />
+      <polygon points="860,130 1180,130 860,0" fill="var(--theme-dark)" />
+    </svg>
+  </div>
+
+  <div class="impact-content">
+    <div class="impact-eyebrow">CORE MESSAGE · 與 AI 共舞的第一條鐵律</div>
+    <div class="impact-quote">你的價值在<br><span class="accent">判斷</span>，<br>不在執行。</div>
+  </div>
+</section>
+
+<p class="slide-label" style="color:#666; margin-top:48px;">— 模板示範結束 —</p>
+<p style="text-align:center; color:#666; font-size:12px; margin-bottom: 32px;">
+  ⚠️ logo 位置目前是虛線占位（[KV LOGO] / KV）— 真實案子用時會 base64 嵌入 <code style="background:#222; padding:2px 6px;">knowledge/kvalley/assets/brand/</code> 的真實 logo
+</p>
+
+</body>
+</html>

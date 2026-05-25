@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accenture Style — All Layouts Demo (20 layouts)</title>
+<style>
+  /* ── Design Tokens ── */
+  :root {
+    --purple: #7B2D8B;
+    --purple-dark: #5A1F6E;
+    --white: #FFFFFF;
+    --black: #1A1A1A;
+    --gray-light: #F4F4F4;
+    --gray-mid: #888888;
+    --gray-border: #D8D8D8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #EBEBEB;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    padding: 40px 20px;
+  }
+
+  /* ── Nav ── */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #1A1A1A; color: #fff;
+    padding: 10px 20px; font-size: 12px;
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .nav a { color: #C49ED0; text-decoration: none; white-space: nowrap; }
+  .nav a:hover { color: #fff; }
+
+  /* ── Slide wrapper ── */
+  .slide-group { margin-bottom: 48px; }
+  .slide-label {
+    font-size: 11px; color: #555; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 6px;
+    padding-left: 4px;
+  }
+  .slide {
+    width: 1280px; height: 720px;
+    position: relative; overflow: hidden;
+    background: var(--white);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  }
+
+  /* ── Signature: header bar ── */
+  .hdr {
+    position: absolute; top: 12px; left: 56px; right: 60px;
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: var(--gray-mid); letter-spacing: 0.04em;
+  }
+  /* Accenture ">" logo (bottom left) */
+  .acc-logo {
+    position: absolute; bottom: 22px; left: 36px;
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; color: var(--purple); font-weight: 900; line-height: 1;
+  }
+  /* Footer hashtag */
+  .acc-footer {
+    position: absolute; bottom: 26px; left: 82px;
+    font-size: 9px; color: var(--gray-mid); letter-spacing: 0.06em;
+  }
+
+  /* ── Purple pullquote box ── */
+  .pq-box {
+    background: var(--purple);
+    display: flex; align-items: center; justify-content: center;
+    padding: 32px;
+  }
+  .pq-text {
+    color: var(--white); font-size: 22px; font-style: italic;
+    line-height: 1.45; font-weight: 300;
+  }
+  .pq-text.lg { font-size: 30px; }
+  .pq-text.sm { font-size: 16px; }
+
+  /* ── Body text helpers ── */
+  .body-sm { font-size: 12px; line-height: 1.65; color: var(--black); }
+  .body-md { font-size: 14px; line-height: 1.6; color: var(--black); }
+  .label-sm {
+    font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--gray-mid); margin-bottom: 6px;
+  }
+  .heading-lg { font-size: 40px; font-weight: 900; color: var(--black); line-height: 1.1; }
+  .heading-md { font-size: 24px; font-weight: 800; color: var(--black); line-height: 1.2; }
+  .heading-sm { font-size: 16px; font-weight: 700; color: var(--black); }
+  .purple-line {
+    width: 48px; height: 3px; background: var(--purple); margin-bottom: 12px;
+  }
+  .stat-big { font-size: 72px; font-weight: 900; color: var(--purple); line-height: 1; }
+  .hr { border: none; border-top: 1px solid var(--gray-border); margin: 12px 0; }
+
+  /* ── Photo placeholder ── */
+  .photo {
+    background: #C9B8D0;
+    display: flex; align-items: center; justify-content: center;
+    color: #7B2D8B; font-size: 11px; opacity: 0.85;
+    text-align: center; letter-spacing: 0.04em;
+  }
+
+  /* ── Wave texture (CSS approximation) ── */
+  .wave-bg {
+    background: linear-gradient(145deg, var(--purple) 0%, #5A1F6E 60%, #3D1050 100%);
+  }
+  .wave-overlay::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 120% 80% at 80% 60%, rgba(255,255,255,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 80% 120% at 20% 30%, rgba(255,255,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Scroll helper on mobile */
+  .slide-scroll { overflow-x: auto; }
+
+  /* ── Layout-specific tweaks ── */
+  .timeline-row { display: flex; align-items: flex-start; gap: 0; }
+  .tl-year { width: 90px; font-size: 13px; font-weight: 800; color: var(--purple); flex-shrink: 0; }
+  .tl-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--purple); margin-top: 2px; flex-shrink: 0; }
+  .tl-line { width: 2px; background: var(--gray-border); align-self: stretch; flex-shrink: 0; margin: 0 16px; }
+  .tl-content { flex: 1; }
+
+  .col-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .col-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .col-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+
+  .num-badge {
+    font-size: 36px; font-weight: 900; color: var(--purple);
+    line-height: 1; margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<div class="nav">
+  <span style="color:#888;margin-right:8px">Accenture Style (20 layouts)</span>
+  <a href="#A">A·Cover</a>
+  <a href="#B">B·Foreword</a>
+  <a href="#C">C·TOC</a>
+  <a href="#D">D·SectionIntro</a>
+  <a href="#E">E·Body+Pullquote2col</a>
+  <a href="#F">F·Body+Photo+Quote</a>
+  <a href="#G">G·DataSplit+Chart</a>
+  <a href="#H">H·Photo+PullquoteOverlay</a>
+  <a href="#I">I·PhotoTop3col</a>
+  <a href="#J">J·MultiSection+Photo</a>
+  <a href="#K">K·StaggeredPullquotes</a>
+  <a href="#L">L·SplitPhoto+Body</a>
+  <a href="#M">M·SectionDivider</a>
+  <a href="#N">N·Timeline3row</a>
+  <a href="#O">O·BigPicture</a>
+  <a href="#P">P·Body+PullquoteRight</a>
+  <a href="#Q">Q·Photo+Body3col</a>
+  <a href="#R">R·PhotoSplit+Pullquote</a>
+  <a href="#S">S·Photo+BodyRight</a>
+  <a href="#T">T·Pullquote4col+SubSection</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- A · Cover -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="A">
+  <div class="slide-label">A — Cover</div>
+  <div class="slide-scroll">
+  <div class="slide wave-bg wave-overlay" style="position:relative;">
+    <!-- Geometric accent line top-left -->
+    <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:rgba(255,255,255,0.15);"></div>
+    <!-- Main content -->
+    <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:80px 90px 80px 90px;">
+      <div style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:28px;">Technology Vision 2024</div>
+      <div style="font-size:72px;font-weight:900;color:#fff;line-height:1.0;margin-bottom:20px;">Human by Design</div>
+      <div style="width:60px;height:3px;background:rgba(255,255,255,0.4);margin-bottom:24px;"></div>
+      <div style="font-size:18px;color:rgba(255,255,255,0.8);line-height:1.5;max-width:560px;">How AI is remaking the human technology partnership — and driving a new era of business reinvention.</div>
+      <div style="margin-top:40px;font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:0.06em;">ACCENTURE RESEARCH</div>
+    </div>
+    <!-- ">" logo bottom left -->
+    <div class="acc-logo" style="color:rgba(255,255,255,0.7);">></div>
+    <div class="acc-footer" style="color:rgba(255,255,255,0.4);">#TechVision2024</div>
+    <!-- Right decorative shape -->
+    <div style="position:absolute;right:-60px;top:50%;transform:translateY(-50%);width:380px;height:380px;border-radius:50%;background:rgba(255,255,255,0.05);"></div>
+    <div style="position:absolute;right:60px;bottom:80px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.04);"></div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- B · Foreword / Exec Letter -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="B">
+  <div class="slide-label">B — Foreword / Exec Letter</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Foreword</span><span>02</span></div>
+    <!-- Left: headshot + sig -->
+    <div style="position:absolute;top:60px;left:56px;width:240px;bottom:60px;display:flex;flex-direction:column;gap:16px;">
+      <div class="photo" style="width:160px;height:160px;border-radius:50%;">Photo</div>
+      <div style="font-size:14px;font-weight:700;color:var(--black);margin-top:8px;">Julie Sweet</div>
+      <div style="font-size:11px;color:var(--gray-mid);">Chair & CEO, Accenture</div>
+      <div style="font-style:italic;font-size:22px;color:var(--purple);margin-top:12px;line-height:1.2;">Julie Sweet</div>
+    </div>
+    <!-- Right: body + pullquote -->
+    <div style="position:absolute;top:60px;left:320px;right:56px;bottom:60px;display:flex;flex-direction:column;gap:18px;">
+      <div class="label-sm">FOREWORD</div>
+      <div class="heading-md" style="font-size:20px;">A new era of human-technology collaboration is upon us.</div>
+      <div class="hr"></div>
+      <div class="body-sm" style="flex:1;">
+        This year's Technology Vision explores how artificial intelligence is fundamentally remaking the relationship between humans and technology. For the first time in computing history, technology is learning to adapt to us — understanding context, intent, and even emotion.<br><br>
+        The implications are profound. Organizations that embrace this shift — designing AI systems with human values at the center — will unlock unprecedented productivity, creativity, and growth. Those that don't risk being left behind.
+      </div>
+      <!-- Black pullquote block -->
+      <div style="background:var(--black);padding:20px 24px;">
+        <div class="pq-text sm" style="color:var(--white);font-style:italic;">
+          "AI is not about replacing humans — it's about amplifying what makes us uniquely human."
+        </div>
+      </div>
+    </div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- C · Table of Contents -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="C">
+  <div class="slide-label">C — Table of Contents</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024</span><span>03</span></div>
+    <!-- Purple left bar -->
+    <div style="position:absolute;top:0;left:0;width:8px;height:100%;background:var(--purple);"></div>
+    <div style="position:absolute;top:60px;left:56px;right:56px;bottom:60px;">
+      <div class="label-sm" style="margin-bottom:20px;">CONTENTS</div>
+      <!-- TOC items -->
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <!-- item -->
+        <div style="display:flex;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--gray-border);">
+          <div style="font-size:42px;font-weight:900;color:var(--purple);width:80px;flex-shrink:0;line-height:1;">01</div>
+          <div style="flex:1;padding-left:16px;">
+            <div class="heading-sm">MyNav for Employees</div>
+            <div class="body-sm" style="color:var(--gray-mid);margin-top:3px;">Personalized career journeys powered by AI intelligence</div>
+          </div>
+          <div style="font-size:12px;color:var(--gray-mid);width:40px;text-align:right;">08</div>
+        </div>
+        <div style="display:flex;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--gray-border);">
+          <div style="font-size:42px;font-weight:900;color:var(--purple);width:80px;flex-shrink:0;line-height:1;">02</div>
+          <div style="flex:1;padding-left:16px;">
+            <div class="heading-sm">Codifying Creativity</div>
+            <div class="body-sm" style="color:var(--gray-mid);margin-top:3px;">Generative AI as the new creative operating system</div>
+          </div>
+          <div style="font-size:12px;color:var(--gray-mid);width:40px;text-align:right;">18</div>
+        </div>
+        <div style="display:flex;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--gray-border);">
+          <div style="font-size:42px;font-weight:900;color:var(--purple);width:80px;flex-shrink:0;line-height:1;">03</div>
+          <div style="flex:1;padding-left:16px;">
+            <div class="heading-sm">Always-On Evolution</div>
+            <div class="body-sm" style="color:var(--gray-mid);margin-top:3px;">Continuous reinvention through autonomous systems</div>
+          </div>
+          <div style="font-size:12px;color:var(--gray-mid);width:40px;text-align:right;">28</div>
+        </div>
+        <div style="display:flex;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--gray-border);">
+          <div style="font-size:42px;font-weight:900;color:var(--purple);width:80px;flex-shrink:0;line-height:1;">04</div>
+          <div style="flex:1;padding-left:16px;">
+            <div class="heading-sm">The Talent Advantage</div>
+            <div class="body-sm" style="color:var(--gray-mid);margin-top:3px;">Building human-AI teams that outperform either alone</div>
+          </div>
+          <div style="font-size:12px;color:var(--gray-mid);width:40px;text-align:right;">40</div>
+        </div>
+      </div>
+    </div>
+    <!-- Bottom purple bar -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:6px;background:var(--purple);"></div>
+    <div class="acc-logo">></div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- D · Section Intro -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="D">
+  <div class="slide-label">D — Section Intro</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Chapter 01</span><span>04</span></div>
+    <!-- Left content -->
+    <div style="position:absolute;top:60px;left:56px;width:620px;bottom:60px;display:flex;flex-direction:column;justify-content:center;gap:18px;">
+      <div style="font-size:11px;color:var(--purple);letter-spacing:0.12em;text-transform:uppercase;font-weight:700;">CHAPTER 01</div>
+      <div class="purple-line"></div>
+      <div style="font-size:56px;font-weight:900;color:var(--black);line-height:1.0;">MyNav for<br>Employees</div>
+      <div class="body-md" style="color:var(--gray-mid);max-width:480px;">How AI-powered personalization is reshaping how organizations understand — and serve — their people at every stage of the employee journey.</div>
+      <div style="margin-top:8px;">
+        <span style="font-size:11px;color:var(--purple);font-weight:700;letter-spacing:0.06em;">→ READ ON P.08</span>
+      </div>
+    </div>
+    <!-- Right: photo -->
+    <div class="photo" style="position:absolute;top:0;right:0;width:580px;height:100%;">
+      Section Photo
+    </div>
+    <!-- Purple accent line over photo edge -->
+    <div style="position:absolute;top:40%;left:620px;width:4px;height:20%;background:var(--purple);"></div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- E · Body + Purple Pullquote 2-col -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="E">
+  <div class="slide-label">E — Body + Purple Pullquote 2-col</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Chapter 01</span><span>05</span></div>
+    <!-- Left: body -->
+    <div style="position:absolute;top:60px;left:56px;width:610px;bottom:60px;display:flex;flex-direction:column;gap:14px;padding-top:8px;">
+      <div class="heading-sm">Reimagining the Employee Experience</div>
+      <div class="hr"></div>
+      <div class="body-sm">
+        For decades, enterprise technology has demanded that humans adapt to it — learning complex interfaces, navigating rigid processes, and conforming to system logic. AI is finally inverting this relationship, making technology that understands the person using it.<br><br>
+        MyNav demonstrates this shift in practice. Rather than a static career portal, it functions as a continuous learning companion — mapping skills, suggesting opportunities, and adapting recommendations as both the organization's needs and the individual's trajectory evolve.<br><br>
+        Early adopters report measurable impact: employees using AI-driven career tools show 34% higher engagement scores and are 2.1× more likely to report feeling "supported" by their organization.
+      </div>
+      <div style="margin-top:auto;">
+        <div class="label-sm">KEY INSIGHT</div>
+        <div class="body-sm">Organizations that deploy personalized AI career tools see 28% reduction in voluntary attrition within 18 months.</div>
+      </div>
+    </div>
+    <!-- Right: purple pullquote box -->
+    <div class="pq-box" style="position:absolute;top:0;right:0;width:570px;height:100%;">
+      <div style="padding:48px;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.1em;margin-bottom:20px;">ACCENTURE RESEARCH FINDING</div>
+        <div class="pq-text lg">
+          "95% of workers want AI to help them perform better — but only 35% trust their organization's AI systems."
+        </div>
+        <div style="margin-top:24px;width:40px;height:2px;background:rgba(255,255,255,0.4);"></div>
+        <div style="margin-top:16px;font-size:11px;color:rgba(255,255,255,0.6);">Source: Accenture Technology Vision Survey 2024, n=4,000</div>
+      </div>
+    </div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- F · Body + Photo + Quote -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="F">
+  <div class="slide-label">F — Body + Photo + Quote</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Chapter 01</span><span>06</span></div>
+    <!-- Top: 3-col body text -->
+    <div style="position:absolute;top:55px;left:56px;right:56px;height:290px;" class="col-3">
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">PERSONALIZATION AT SCALE</div>
+        <div class="body-sm">Personalization in enterprise has long been aspirational. The gap between what companies know about employees and what they act on remains vast. AI closes that gap — not by collecting more data, but by making sense of the data that already exists.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">CONTINUOUS ADAPTATION</div>
+        <div class="body-sm">Unlike one-time assessments, AI career tools run continuously — recalibrating as market conditions shift, as skills evolve, and as the individual signals new interests through behavior. It's always-on career intelligence.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">TRUST AS FOUNDATION</div>
+        <div class="body-sm">The technology works only when employees trust it. Organizations are finding that transparency — explaining recommendations, surfacing the reasoning — dramatically increases adoption and the quality of feedback loops.</div>
+      </div>
+    </div>
+    <div class="hr" style="position:absolute;top:350px;left:56px;right:56px;"></div>
+    <!-- Bottom: full-width photo with purple italic callout -->
+    <div style="position:absolute;top:360px;left:0;right:0;bottom:0;">
+      <div class="photo" style="width:100%;height:100%;">Full-width photo — workplace / technology imagery</div>
+      <!-- Purple italic callout overlay -->
+      <div style="position:absolute;bottom:0;left:56px;right:56px;padding:20px 0;">
+        <div style="font-size:20px;font-style:italic;color:var(--white);font-weight:300;text-shadow:0 1px 8px rgba(0,0,0,0.6);">
+          "The question is no longer whether AI understands employees — it's whether employees feel understood."
+        </div>
+      </div>
+    </div>
+    <div class="acc-logo" style="z-index:10;">></div>
+    <div class="acc-footer" style="z-index:10;">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- G · Data Split + Chart -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="G">
+  <div class="slide-label">G — Data Split + Chart</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Chapter 02</span><span>07</span></div>
+    <!-- Left: large stat + body -->
+    <div style="position:absolute;top:60px;left:56px;width:520px;bottom:60px;display:flex;flex-direction:column;gap:16px;padding-top:8px;">
+      <div class="label-sm">RESEARCH HIGHLIGHT</div>
+      <div class="stat-big">97%</div>
+      <div class="heading-sm">of executives say generative AI will be transformative for their industry</div>
+      <div class="hr"></div>
+      <div class="body-sm">
+        The gap between aspiration and action has never been narrower. Organizations that spent 2023 in "pilot mode" are now building production-grade generative AI systems — not as supplements to existing workflows, but as core operating infrastructure.<br><br>
+        Accenture's research finds that leading organizations are not simply deploying GenAI tools — they are restructuring teams, rewiring processes, and reimagining what productivity means.
+      </div>
+    </div>
+    <!-- Right: chart area -->
+    <div style="position:absolute;top:60px;right:56px;width:550px;bottom:60px;display:flex;flex-direction:column;gap:12px;padding-top:8px;">
+      <div class="label-sm">GENAI ADOPTION BY FUNCTION (% of organizations)</div>
+      <!-- Bar chart rows -->
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:130px;font-size:11px;text-align:right;color:var(--black);">IT / Engineering</div>
+          <div style="flex:1;height:28px;background:var(--gray-light);border-radius:2px;overflow:hidden;position:relative;">
+            <div style="width:78%;height:100%;background:var(--purple);border-radius:2px;"></div>
+            <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--black);">78%</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:130px;font-size:11px;text-align:right;color:var(--black);">Marketing</div>
+          <div style="flex:1;height:28px;background:var(--gray-light);border-radius:2px;overflow:hidden;position:relative;">
+            <div style="width:71%;height:100%;background:var(--purple);border-radius:2px;"></div>
+            <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--black);">71%</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:130px;font-size:11px;text-align:right;color:var(--black);">Customer Service</div>
+          <div style="flex:1;height:28px;background:var(--gray-light);border-radius:2px;overflow:hidden;position:relative;">
+            <div style="width:65%;height:100%;background:var(--purple);opacity:0.8;border-radius:2px;"></div>
+            <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--black);">65%</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:130px;font-size:11px;text-align:right;color:var(--black);">Finance</div>
+          <div style="flex:1;height:28px;background:var(--gray-light);border-radius:2px;overflow:hidden;position:relative;">
+            <div style="width:58%;height:100%;background:var(--purple);opacity:0.6;border-radius:2px;"></div>
+            <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--black);">58%</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:130px;font-size:11px;text-align:right;color:var(--black);">HR / People</div>
+          <div style="flex:1;height:28px;background:var(--gray-light);border-radius:2px;overflow:hidden;position:relative;">
+            <div style="width:44%;height:100%;background:var(--purple);opacity:0.5;border-radius:2px;"></div>
+            <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--black);">44%</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:130px;font-size:11px;text-align:right;color:var(--black);">Legal / Risk</div>
+          <div style="flex:1;height:28px;background:var(--gray-light);border-radius:2px;overflow:hidden;position:relative;">
+            <div style="width:32%;height:100%;background:var(--purple);opacity:0.4;border-radius:2px;"></div>
+            <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:var(--black);">32%</span>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:9px;color:var(--gray-mid);">Source: Accenture Technology Vision Survey 2024 (n=3,200 executives, 19 industries)</div>
+    </div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- H · Photo + Pullquote Overlay -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="H">
+  <div class="slide-label">H — Photo + Pullquote Overlay</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr" style="z-index:5;position:absolute;top:12px;left:56px;right:60px;display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.7);">
+      <span>Technology Vision 2024 | Chapter 02</span><span>08</span>
+    </div>
+    <!-- Full-bleed photo -->
+    <div class="photo" style="position:absolute;inset:0;width:100%;height:100%;">Full-bleed background photo</div>
+    <!-- Dark scrim left side -->
+    <div style="position:absolute;top:0;left:0;width:55%;height:100%;background:linear-gradient(to right, rgba(123,45,139,0.88) 0%, rgba(123,45,139,0.6) 70%, transparent 100%);"></div>
+    <!-- Pullquote box -->
+    <div style="position:absolute;top:50%;left:56px;transform:translateY(-50%);width:560px;">
+      <div style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.1em;margin-bottom:16px;">TECHNOLOGY VISION 2024</div>
+      <div style="font-size:34px;font-style:italic;font-weight:300;color:#fff;line-height:1.35;">
+        "In the age of generative AI, the most competitive advantage isn't compute — it's the human judgment to direct it."
+      </div>
+      <div style="margin-top:20px;width:48px;height:2px;background:rgba(255,255,255,0.5);"></div>
+    </div>
+    <div class="acc-logo" style="color:rgba(255,255,255,0.7);">></div>
+    <div class="acc-footer" style="color:rgba(255,255,255,0.4);">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- I · Photo Top + 3-col Body -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="I">
+  <div class="slide-label">I — Photo Top + 3-col Body</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Chapter 02</span><span>09</span></div>
+    <!-- Top: full-width photo -->
+    <div class="photo" style="position:absolute;top:0;left:0;right:0;height:320px;">Top full-width photo</div>
+    <!-- Chapter label over photo -->
+    <div style="position:absolute;top:14px;left:56px;font-size:10px;color:rgba(255,255,255,0.75);letter-spacing:0.04em;z-index:5;">Technology Vision 2024 | Chapter 02</div>
+    <div style="position:absolute;top:14px;right:56px;font-size:10px;color:rgba(255,255,255,0.75);z-index:5;">09</div>
+    <!-- Bottom: 3-col body -->
+    <div style="position:absolute;top:330px;left:56px;right:56px;bottom:55px;" class="col-3">
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">CODIFYING CREATIVITY</div>
+        <div class="body-sm">Generative AI is fundamentally changing how organizations produce creative work — from marketing copy to software code, from product design to customer communication. The shift isn't just efficiency; it's a new creative operating model.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">HUMAN + AI TEAMS</div>
+        <div class="body-sm">The highest-performing organizations are building human-AI creative teams where AI handles volume and variation while humans provide taste, judgment, and strategy. Neither alone matches the combination's output quality and speed.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">REINVENTING WORKFLOWS</div>
+        <div class="body-sm">Leaders are discovering that simply adding GenAI to existing creative workflows produces marginal gains. Transformative value comes from redesigning the workflow from scratch — with AI's capabilities as a first-class design constraint.</div>
+      </div>
+    </div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- J · Multi-section + Photo -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="J">
+  <div class="slide-label">J — Multi-section + Photo</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Chapter 02</span><span>10</span></div>
+    <!-- Left: numbered sections -->
+    <div style="position:absolute;top:60px;left:56px;width:580px;bottom:60px;display:flex;flex-direction:column;gap:20px;padding-top:8px;">
+      <div class="heading-sm" style="font-size:18px;">Three Forces Reshaping Creative Work</div>
+      <div class="hr"></div>
+      <div style="display:flex;flex-direction:column;gap:16px;flex:1;">
+        <div style="display:flex;gap:16px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid var(--gray-border);">
+          <div class="num-badge">01</div>
+          <div>
+            <div class="heading-sm" style="margin-bottom:5px;">Volume Without Compromise</div>
+            <div class="body-sm">AI can produce 10× the creative variants in the same time — enabling true personalization at scale without sacrificing creative quality. The ceiling is no longer production bandwidth; it's strategic imagination.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid var(--gray-border);">
+          <div class="num-badge">02</div>
+          <div>
+            <div class="heading-sm" style="margin-bottom:5px;">Iteration as Intelligence</div>
+            <div class="body-sm">Rapid iteration has always been a competitive advantage. GenAI compresses iteration cycles from days to minutes — giving teams the ability to test, learn, and refine faster than ever before.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <div class="num-badge">03</div>
+          <div>
+            <div class="heading-sm" style="margin-bottom:5px;">Creative Augmentation</div>
+            <div class="body-sm">The best creative professionals aren't threatened by GenAI — they're multiplied by it. Organizations investing in AI creative literacy are seeing talent retention improvements alongside output gains.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Right: large photo -->
+    <div class="photo" style="position:absolute;top:0;right:0;width:570px;height:100%;">Right large photo</div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- K · Staggered Pullquotes -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="K">
+  <div class="slide-label">K — Staggered Pullquotes</div>
+  <div class="slide-scroll">
+  <div class="slide" style="background:var(--gray-light);">
+    <div class="hdr"><span>Technology Vision 2024 | Chapter 03</span><span>11</span></div>
+    <!-- Staggered purple pullquote boxes -->
+    <div style="position:absolute;top:55px;left:56px;right:56px;bottom:55px;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:16px;">
+      <!-- Large box spanning 2 cols -->
+      <div class="pq-box" style="grid-column:1/3;grid-row:1/2;padding:36px;">
+        <div class="pq-text lg">"Organizations that treat AI as a tool miss the point. The real transformation is treating AI as a colleague."</div>
+      </div>
+      <!-- Small box -->
+      <div class="pq-box" style="grid-column:3/4;grid-row:1/2;padding:24px;align-items:flex-start;">
+        <div class="pq-text sm">"72% of technology leaders expect AI to fundamentally change their industry within 3 years."<br><br><span style="font-size:10px;opacity:0.7;">— Tech Vision 2024 Survey</span></div>
+      </div>
+      <!-- Small box -->
+      <div class="pq-box" style="grid-column:1/2;grid-row:2/3;padding:24px;align-items:flex-start;">
+        <div class="pq-text sm">"The reinvention window is closing. First movers are pulling ahead faster than laggards can catch up."</div>
+      </div>
+      <!-- Medium box -->
+      <div class="pq-box" style="grid-column:2/4;grid-row:2/3;padding:32px;">
+        <div class="pq-text">"Always-On Evolution means the enterprise never stops learning — it adapts, anticipates, and improves in real time."</div>
+      </div>
+    </div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- L · Split Photo + Body -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="L">
+  <div class="slide-label">L — Split Photo + Body</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr" style="z-index:5;color:rgba(255,255,255,0.7);"><span>Technology Vision 2024 | Chapter 03</span><span>12</span></div>
+    <!-- Left half: photo (bleed to edge) -->
+    <div class="photo" style="position:absolute;top:0;left:0;width:560px;height:100%;">Left photo bleed</div>
+    <!-- Purple accent line -->
+    <div style="position:absolute;top:20%;left:553px;width:5px;height:60%;background:var(--purple);z-index:3;"></div>
+    <!-- Right: body -->
+    <div style="position:absolute;top:60px;left:580px;right:56px;bottom:60px;display:flex;flex-direction:column;gap:16px;padding-top:8px;">
+      <div class="label-sm">ALWAYS-ON EVOLUTION</div>
+      <div class="purple-line"></div>
+      <div class="heading-md">The Enterprise That Never Stops Learning</div>
+      <div class="hr"></div>
+      <div class="body-sm">
+        Continuous reinvention is no longer a strategic choice — it's a survival requirement. Organizations that can update their capabilities, processes, and strategies in real time gain a compound advantage that accelerates over time.<br><br>
+        AI-powered always-on systems create feedback loops that traditional planning cycles can't match. By the time a quarterly review identifies a gap, the leading competitor has already closed it three times over.
+      </div>
+      <div style="margin-top:auto;padding:16px;background:var(--gray-light);border-left:3px solid var(--purple);">
+        <div class="body-sm" style="font-style:italic;color:var(--purple);font-weight:600;">"Real-time adaptation isn't a feature — it's the new foundation of competitive strategy."</div>
+      </div>
+    </div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- M · Section Divider -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="M">
+  <div class="slide-label">M — Section Divider</div>
+  <div class="slide-scroll">
+  <div class="slide wave-bg wave-overlay">
+    <!-- Section number (massive) -->
+    <div style="position:absolute;top:50%;left:56px;transform:translateY(-50%);">
+      <div style="font-size:160px;font-weight:900;color:rgba(255,255,255,0.12);line-height:1;">03</div>
+    </div>
+    <!-- Content centered -->
+    <div style="position:absolute;top:50%;left:56px;right:56px;transform:translateY(-50%);display:flex;flex-direction:column;gap:20px;padding-left:8px;">
+      <div style="font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:0.14em;text-transform:uppercase;">Chapter 03</div>
+      <div style="font-size:60px;font-weight:900;color:#fff;line-height:1.0;">Always-On<br>Evolution</div>
+      <div style="width:64px;height:3px;background:rgba(255,255,255,0.4);"></div>
+      <div style="font-size:16px;color:rgba(255,255,255,0.7);max-width:480px;line-height:1.5;">Building the continuously reinventing enterprise — where AI enables real-time adaptation as a core organizational capability.</div>
+    </div>
+    <div class="acc-logo" style="color:rgba(255,255,255,0.6);">></div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- N · Timeline 3-row -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="N">
+  <div class="slide-label">N — Timeline 3-row</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Chapter 03</span><span>14</span></div>
+    <div style="position:absolute;top:60px;left:56px;right:56px;bottom:60px;display:flex;flex-direction:column;gap:12px;padding-top:8px;">
+      <div class="heading-sm" style="font-size:16px;">The AI Reinvention Timeline — From Experiment to Infrastructure</div>
+      <div class="hr"></div>
+      <!-- Timeline: horizontal rows -->
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:space-around;">
+        <!-- Row: label + nodes -->
+        <div style="display:flex;align-items:center;gap:0;position:relative;">
+          <div style="width:110px;font-size:10px;font-weight:700;color:var(--gray-mid);text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0;">STRATEGY</div>
+          <div style="flex:1;position:relative;height:48px;">
+            <div style="position:absolute;top:50%;left:0;right:0;height:2px;background:var(--gray-border);transform:translateY(-50%);"></div>
+            <div style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;height:100%;">
+              <div style="text-align:center;position:relative;">
+                <div style="width:16px;height:16px;border-radius:50%;background:var(--purple);border:3px solid var(--white);box-shadow:0 0 0 2px var(--purple);z-index:1;position:relative;"></div>
+                <div style="position:absolute;top:22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--black);font-weight:600;">2022<br><span style="font-weight:400;color:var(--gray-mid);">Pilot programs</span></div>
+              </div>
+              <div style="text-align:center;position:relative;">
+                <div style="width:16px;height:16px;border-radius:50%;background:var(--purple);border:3px solid var(--white);box-shadow:0 0 0 2px var(--purple);z-index:1;position:relative;"></div>
+                <div style="position:absolute;top:22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--black);font-weight:600;">2023<br><span style="font-weight:400;color:var(--gray-mid);">Use case scaling</span></div>
+              </div>
+              <div style="text-align:center;position:relative;">
+                <div style="width:20px;height:20px;border-radius:50%;background:var(--purple);border:3px solid var(--white);box-shadow:0 0 0 2px var(--purple);z-index:1;position:relative;"></div>
+                <div style="position:absolute;top:26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--purple);font-weight:700;">2024<br><span>Enterprise AI OS</span></div>
+              </div>
+              <div style="text-align:center;position:relative;">
+                <div style="width:14px;height:14px;border-radius:50%;background:var(--gray-border);border:2px solid var(--gray-mid);z-index:1;position:relative;"></div>
+                <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--gray-mid);">2025+<br><span>Autonomous reinvention</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hr"></div>
+        <!-- Row 2 -->
+        <div style="display:flex;align-items:center;gap:0;position:relative;">
+          <div style="width:110px;font-size:10px;font-weight:700;color:var(--gray-mid);text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0;">TALENT</div>
+          <div style="flex:1;position:relative;height:48px;">
+            <div style="position:absolute;top:50%;left:0;right:0;height:2px;background:var(--gray-border);transform:translateY(-50%);"></div>
+            <div style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;height:100%;">
+              <div style="text-align:center;position:relative;"><div style="width:14px;height:14px;border-radius:50%;background:var(--gray-border);border:2px solid var(--gray-mid);z-index:1;position:relative;"></div><div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--gray-mid);">Upskilling<br>awareness</div></div>
+              <div style="text-align:center;position:relative;"><div style="width:16px;height:16px;border-radius:50%;background:var(--purple);border:3px solid var(--white);box-shadow:0 0 0 2px var(--purple);z-index:1;position:relative;"></div><div style="position:absolute;top:22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--black);font-weight:600;">AI literacy<br>programs</div></div>
+              <div style="text-align:center;position:relative;"><div style="width:20px;height:20px;border-radius:50%;background:var(--purple);border:3px solid var(--white);box-shadow:0 0 0 2px var(--purple);z-index:1;position:relative;"></div><div style="position:absolute;top:26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--purple);font-weight:700;">Human+AI<br>teaming at scale</div></div>
+              <div style="text-align:center;position:relative;"><div style="width:14px;height:14px;border-radius:50%;background:var(--gray-border);border:2px solid var(--gray-mid);z-index:1;position:relative;"></div><div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--gray-mid);">AI-native<br>workforce</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="hr"></div>
+        <!-- Row 3 -->
+        <div style="display:flex;align-items:center;gap:0;position:relative;">
+          <div style="width:110px;font-size:10px;font-weight:700;color:var(--gray-mid);text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0;">TECHNOLOGY</div>
+          <div style="flex:1;position:relative;height:48px;">
+            <div style="position:absolute;top:50%;left:0;right:0;height:2px;background:var(--gray-border);transform:translateY(-50%);"></div>
+            <div style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;height:100%;">
+              <div style="text-align:center;position:relative;"><div style="width:14px;height:14px;border-radius:50%;background:var(--gray-border);border:2px solid var(--gray-mid);z-index:1;position:relative;"></div><div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--gray-mid);">Foundation<br>models</div></div>
+              <div style="text-align:center;position:relative;"><div style="width:16px;height:16px;border-radius:50%;background:var(--purple);border:3px solid var(--white);box-shadow:0 0 0 2px var(--purple);z-index:1;position:relative;"></div><div style="position:absolute;top:22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--black);font-weight:600;">Enterprise<br>fine-tuning</div></div>
+              <div style="text-align:center;position:relative;"><div style="width:20px;height:20px;border-radius:50%;background:var(--purple);border:3px solid var(--white);box-shadow:0 0 0 2px var(--purple);z-index:1;position:relative;"></div><div style="position:absolute;top:26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--purple);font-weight:700;">AI platform<br>infrastructure</div></div>
+              <div style="text-align:center;position:relative;"><div style="width:14px;height:14px;border-radius:50%;background:var(--gray-border);border:2px solid var(--gray-mid);z-index:1;position:relative;"></div><div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;color:var(--gray-mid);">Autonomous<br>AI agents</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- O · Big Picture / Infographic -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="O">
+  <div class="slide-label">O — Big Picture / Infographic</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Framework</span><span>15</span></div>
+    <div style="position:absolute;top:55px;left:56px;right:56px;bottom:55px;display:flex;flex-direction:column;gap:8px;padding-top:8px;">
+      <div class="heading-sm" style="text-align:center;font-size:14px;">The Accenture Technology Vision 2024 Framework</div>
+      <!-- Central diagram -->
+      <div style="flex:1;position:relative;display:flex;align-items:center;justify-content:center;">
+        <!-- Center circle -->
+        <div style="width:180px;height:180px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:16px;z-index:2;position:relative;">
+          <div style="font-size:11px;font-weight:700;color:#fff;line-height:1.3;">Human by Design</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.7);margin-top:4px;">The Unifying Theme</div>
+        </div>
+        <!-- Ring -->
+        <div style="position:absolute;width:280px;height:280px;border-radius:50%;border:2px dashed rgba(123,45,139,0.3);"></div>
+        <!-- Satellite nodes -->
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+          <!-- Top -->
+          <div style="position:absolute;transform:translate(-50%,-50%) translate(0px, -200px);text-align:center;">
+            <div style="width:120px;height:80px;background:var(--gray-light);border:2px solid var(--purple);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto;">
+              <div style="font-size:10px;font-weight:700;color:var(--purple);">01</div>
+              <div style="font-size:9px;font-weight:700;color:var(--black);line-height:1.2;text-align:center;padding:0 6px;">MyNav for<br>Employees</div>
+            </div>
+          </div>
+          <!-- Right -->
+          <div style="position:absolute;transform:translate(-50%,-50%) translate(240px, 0px);text-align:center;">
+            <div style="width:120px;height:80px;background:var(--gray-light);border:2px solid var(--purple);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto;">
+              <div style="font-size:10px;font-weight:700;color:var(--purple);">02</div>
+              <div style="font-size:9px;font-weight:700;color:var(--black);line-height:1.2;text-align:center;padding:0 6px;">Codifying<br>Creativity</div>
+            </div>
+          </div>
+          <!-- Bottom -->
+          <div style="position:absolute;transform:translate(-50%,-50%) translate(0px, 200px);text-align:center;">
+            <div style="width:120px;height:80px;background:var(--gray-light);border:2px solid var(--purple);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto;">
+              <div style="font-size:10px;font-weight:700;color:var(--purple);">03</div>
+              <div style="font-size:9px;font-weight:700;color:var(--black);line-height:1.2;text-align:center;padding:0 6px;">Always-On<br>Evolution</div>
+            </div>
+          </div>
+          <!-- Left -->
+          <div style="position:absolute;transform:translate(-50%,-50%) translate(-240px, 0px);text-align:center;">
+            <div style="width:120px;height:80px;background:var(--gray-light);border:2px solid var(--purple);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto;">
+              <div style="font-size:10px;font-weight:700;color:var(--purple);">04</div>
+              <div style="font-size:9px;font-weight:700;color:var(--black);line-height:1.2;text-align:center;padding:0 6px;">The Talent<br>Advantage</div>
+            </div>
+          </div>
+          <!-- Connector lines -->
+          <div style="position:absolute;transform:translate(-50%,-50%);width:2px;height:120px;background:rgba(123,45,139,0.3);top:-120px;left:0;"></div>
+          <div style="position:absolute;transform:translate(-50%,-50%);width:2px;height:120px;background:rgba(123,45,139,0.3);top:50%;left:0;"></div>
+          <div style="position:absolute;transform:translate(-50%,-50%) rotate(90deg);width:2px;height:120px;background:rgba(123,45,139,0.3);top:0;left:120px;"></div>
+          <div style="position:absolute;transform:translate(-50%,-50%) rotate(90deg);width:2px;height:120px;background:rgba(123,45,139,0.3);top:0;left:-120px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- P · Body + Pullquote Right -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="P">
+  <div class="slide-label">P — Body + Pullquote Right</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Chapter 04</span><span>16</span></div>
+    <!-- Left 2/3: body text (multi-paragraph) -->
+    <div style="position:absolute;top:60px;left:56px;width:740px;bottom:60px;display:flex;flex-direction:column;gap:14px;padding-top:8px;">
+      <div class="label-sm">THE TALENT ADVANTAGE</div>
+      <div class="heading-md">Building Human-AI Teams That Outperform Either Alone</div>
+      <div class="hr"></div>
+      <div class="body-sm">
+        The most significant competitive shift of the AI era won't be about which company has the best AI — it will be about which company builds the best human-AI teams. Technology alone doesn't win; the combination of human judgment and AI capability does.
+      </div>
+      <div class="body-sm">
+        Accenture's research across 1,200 organizations finds a consistent pattern: companies that invest equally in AI tools AND human AI literacy outperform those that focus on tools alone by 3.4× on productivity metrics and 2.1× on innovation output.
+      </div>
+      <div class="body-sm">
+        The implication is clear — the talent equation is inseparable from the technology equation. Organizations that treat AI as a pure technology investment, divorced from human capability building, will underperform. The winners will be those who make developing AI-fluent talent a board-level priority.
+      </div>
+      <div style="margin-top:auto;">
+        <div class="body-sm" style="font-size:10px;color:var(--gray-mid);">Source: Accenture Future of Work Research 2024, n=1,200 organizations across 12 industries</div>
+      </div>
+    </div>
+    <!-- Right 1/3: purple pullquote box -->
+    <div class="pq-box" style="position:absolute;top:0;right:0;width:400px;height:100%;padding:40px 32px;align-items:flex-start;flex-direction:column;justify-content:center;gap:20px;">
+      <div style="font-size:9px;color:rgba(255,255,255,0.5);letter-spacing:0.1em;">KEY STATISTIC</div>
+      <div class="pq-text" style="font-size:52px;font-style:normal;font-weight:900;line-height:1;">3.4×</div>
+      <div class="pq-text sm">productivity advantage for organizations that build human AND AI capability together</div>
+      <div style="width:32px;height:2px;background:rgba(255,255,255,0.3);"></div>
+      <div class="pq-text sm" style="font-size:13px;">"The question isn't human <em>or</em> AI. It's always human <em>and</em> AI."</div>
+    </div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- Q · Photo + Body 3-col -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="Q">
+  <div class="slide-label">Q — Photo + Body 3-col</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Chapter 04</span><span>17</span></div>
+    <!-- Left 1/3: photo -->
+    <div class="photo" style="position:absolute;top:0;left:0;width:400px;height:100%;">Left photo (1/3 width, full bleed)</div>
+    <!-- Right 2/3: 2-col body + header spanning both -->
+    <div style="position:absolute;top:55px;left:420px;right:56px;bottom:55px;display:flex;flex-direction:column;gap:12px;">
+      <div class="heading-sm" style="font-size:15px;">How Leading Organizations Build AI-Fluent Teams</div>
+      <div class="hr"></div>
+      <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="label-sm">STRUCTURED LEARNING</div>
+          <div class="body-sm">Leading organizations aren't waiting for AI fluency to develop organically. They're building structured AI academies — mandatory curricula covering practical AI use, prompt engineering, and responsible AI principles.</div>
+          <div class="label-sm" style="margin-top:8px;">ON-THE-JOB PRACTICE</div>
+          <div class="body-sm">Classroom training alone doesn't build fluency. The highest performers embed AI tools directly into daily workflows, requiring teams to use them on real projects — with coaching support to overcome friction points.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="label-sm">LEADERSHIP MODELING</div>
+          <div class="body-sm">AI adoption follows leadership example. Organizations where C-suite leaders visibly use AI tools — sharing outputs, discussing challenges — see 2× faster adoption rates in their teams.</div>
+          <div class="label-sm" style="margin-top:8px;">MEASUREMENT & INCENTIVES</div>
+          <div class="body-sm">What gets measured gets done. Organizations that tie performance reviews and incentive structures to AI adoption metrics see dramatically faster capability building than those treating AI as optional.</div>
+        </div>
+      </div>
+    </div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- R · Photo Split + Pullquote -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="R">
+  <div class="slide-label">R — Photo Split + Pullquote</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr"><span>Technology Vision 2024 | Chapter 04</span><span>18</span></div>
+    <!-- Top half: left photo + right pullquote -->
+    <div style="position:absolute;top:38px;left:0;right:0;height:340px;display:flex;">
+      <div class="photo" style="width:580px;height:100%;">Left photo</div>
+      <div class="pq-box" style="flex:1;padding:32px 40px;align-items:flex-start;flex-direction:column;justify-content:center;gap:12px;">
+        <div style="font-size:9px;color:rgba(255,255,255,0.5);letter-spacing:0.1em;">INSIGHT</div>
+        <div class="pq-text">"Organizations that invest in AI fluency today are building a compound advantage that will be nearly impossible for laggards to close by 2026."</div>
+      </div>
+    </div>
+    <!-- Bottom half: 2-col body + data callout -->
+    <div style="position:absolute;top:390px;left:56px;right:56px;bottom:55px;display:grid;grid-template-columns:1fr 1fr 200px;gap:20px;align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">EARLY MOVER ADVANTAGE</div>
+        <div class="body-sm">Companies that began structured AI talent programs in 2022–2023 now have workforces that are 18 months ahead of competitors in practical AI capability. This advantage compounds — experienced AI-fluent teams build better AI tools, which further accelerates capability.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">THE SKILLS GAP WIDENING</div>
+        <div class="body-sm">Accenture's analysis shows the capability gap between AI leaders and laggards is widening, not narrowing. Without deliberate intervention, late movers face a structural disadvantage that grows harder to overcome with each passing quarter.</div>
+      </div>
+      <!-- Data callout -->
+      <div style="background:var(--gray-light);padding:16px;border-top:3px solid var(--purple);">
+        <div class="stat-big" style="font-size:48px;">73%</div>
+        <div class="body-sm" style="margin-top:8px;">of executives say AI talent gap is their #1 barrier to AI value realization</div>
+      </div>
+    </div>
+    <div class="acc-logo">></div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- S · Photo + Body Right -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="S">
+  <div class="slide-label">S — Photo + Body Right</div>
+  <div class="slide-scroll">
+  <div class="slide">
+    <div class="hdr" style="z-index:5;color:rgba(255,255,255,0.7);"><span>Technology Vision 2024 | Methodology</span><span>19</span></div>
+    <!-- Left 2/3: photo bleed -->
+    <div class="photo" style="position:absolute;top:0;left:0;width:820px;height:100%;">Left photo (2/3 width, full bleed)</div>
+    <!-- Purple accent line at junction -->
+    <div style="position:absolute;top:15%;left:815px;width:4px;height:70%;background:var(--purple);z-index:3;"></div>
+    <!-- Right 1/3: white body panel -->
+    <div style="position:absolute;top:0;right:0;width:440px;height:100%;background:var(--white);display:flex;flex-direction:column;justify-content:center;padding:40px 40px 40px 36px;gap:16px;">
+      <div class="label-sm">RESEARCH METHODOLOGY</div>
+      <div class="purple-line"></div>
+      <div class="heading-sm" style="font-size:18px;">About Accenture Technology Vision</div>
+      <div class="body-sm">
+        Now in its 24th year, the Accenture Technology Vision identifies the technology trends that are set to disrupt business and society in the next three to five years.
+      </div>
+      <div class="body-sm">
+        This year's research surveyed 4,000 business and technology leaders across 21 industries and 29 countries. Interviews were conducted with industry experts and Accenture's global technology leadership.
+      </div>
+      <!-- Small Accenture logo placeholder -->
+      <div style="margin-top:auto;display:flex;align-items:center;gap:8px;">
+        <div style="font-size:22px;color:var(--purple);font-weight:900;">></div>
+        <div style="font-size:12px;font-weight:700;color:var(--black);">Accenture</div>
+      </div>
+    </div>
+    <div class="acc-footer">#TechVision2024</div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- T · Pullquote 4-col + SubSection (Back Cover) -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="slide-group" id="T">
+  <div class="slide-label">T — Pullquote 4-col + SubSection (Back Cover)</div>
+  <div class="slide-scroll">
+  <div class="slide" style="background:var(--gray-light);">
+    <div class="hdr"><span>Technology Vision 2024</span><span>20</span></div>
+    <!-- Top: large italic pullquote -->
+    <div style="position:absolute;top:48px;left:56px;right:56px;height:200px;display:flex;align-items:center;border-bottom:1px solid var(--gray-border);">
+      <div style="font-size:32px;font-style:italic;color:var(--purple);font-weight:300;line-height:1.35;">
+        "The future belongs to organizations that put humans at the center of their technology strategy — not as an afterthought, but as the design principle."
+      </div>
+    </div>
+    <!-- Bottom: 4-col conclusion text -->
+    <div style="position:absolute;top:270px;left:56px;right:56px;bottom:60px;" class="col-4">
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">TAKE ACTION NOW</div>
+        <div class="body-sm" style="font-size:11px;">Assess your organization's AI maturity across all four Technology Vision dimensions. Identify the highest-impact use cases and build a 90-day roadmap to production.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">BUILD AI FLUENCY</div>
+        <div class="body-sm" style="font-size:11px;">Launch a structured AI literacy program for your entire workforce — not just technologists. Budget 5–10% of L&amp;D spend on AI capability building starting in 2024.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">REDESIGN WORKFLOWS</div>
+        <div class="body-sm" style="font-size:11px;">Don't bolt AI onto existing processes. Identify three core workflows to redesign from scratch with AI-native thinking. Measure results and scale what works.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="label-sm">ABOUT ACCENTURE</div>
+        <div class="body-sm" style="font-size:11px;">Accenture is a global professional services company with capabilities across strategy, consulting, digital, technology, and operations. accenture.com</div>
+        <div style="margin-top:8px;display:flex;align-items:center;gap:6px;">
+          <div style="font-size:20px;color:var(--purple);font-weight:900;">></div>
+          <div style="font-size:11px;font-weight:700;color:var(--black);">Accenture</div>
+        </div>
+      </div>
+    </div>
+    <!-- Bottom purple bar -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:6px;background:var(--purple);"></div>
+    <div class="acc-logo">></div>
+  </div>
+  </div>
+</div>
+
+</body>
+</html>

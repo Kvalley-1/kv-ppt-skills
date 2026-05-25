@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gradient Pitch BW — All Layouts Demo (11 layouts)</title>
+<style>
+  :root {
+    --light-bg: #E5E8EA;
+    --dark-bg: #1E1E1E;
+    --white: #FFFFFF;
+    --black: #0D0D0D;
+    --gray-mid: #888888;
+    --gray-card: #2C2C2C;
+    --gray-border: #DDDDDD;
+    --card-radius: 24px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #CACACA;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    padding: 40px 20px;
+  }
+
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #111; color: #fff;
+    padding: 10px 20px; font-size: 12px;
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+  .nav a { color: #aaa; text-decoration: none; white-space: nowrap; }
+  .nav a:hover { color: #fff; }
+
+  /* Slide group */
+  .slide-group { margin-bottom: 48px; }
+  .slide-label {
+    font-size: 11px; color: #444; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 6px; padding-left: 4px;
+  }
+  .slide-scroll { overflow-x: auto; }
+  .slide {
+    width: 1280px; height: 720px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.22);
+  }
+
+  /* Background modes */
+  .light { background: linear-gradient(135deg, #D0D4D8 0%, #E8EBEE 50%, #F4F5F6 100%); }
+  .dark { background: radial-gradient(ellipse 140% 100% at 80% 50%, #2A2A2A 0%, #1A1A1A 60%, #111111 100%); }
+
+  /* Header bar (light slides) */
+  .hdr-light {
+    position: absolute; top: 0; left: 0; right: 0;
+    padding: 14px 52px 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .hdr-logo { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #333; }
+  .hdr-logo-icon {
+    width: 22px; height: 22px; border: 2px solid #333; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 900;
+  }
+  .hdr-date { font-size: 13px; color: #555; }
+  .hdr-rule { position: absolute; top: 44px; left: 52px; right: 52px; height: 1px; background: #BBBBBB; }
+
+  /* Rounded card */
+  .card {
+    border-radius: var(--card-radius);
+    padding: 28px 32px;
+  }
+  .card-white { background: var(--white); }
+  .card-dark { background: var(--gray-card); }
+  .card-black { background: var(--black); }
+
+  /* Photo placeholder */
+  .photo {
+    background: #8A9BAB;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.5); font-size: 11px;
+    letter-spacing: 0.06em;
+    border-radius: var(--card-radius);
+    overflow: hidden;
+  }
+  .photo.dark-photo { background: #3A4550; }
+  .photo.no-radius { border-radius: 0; }
+
+  /* Typography */
+  .display { font-size: 72px; font-weight: 900; line-height: 0.95; letter-spacing: -0.02em; }
+  .display-sm { font-size: 52px; font-weight: 900; line-height: 0.95; letter-spacing: -0.02em; }
+  .display-xs { font-size: 40px; font-weight: 900; line-height: 1.0; letter-spacing: -0.01em; }
+  .heading { font-size: 22px; font-weight: 700; line-height: 1.2; }
+  .subheading { font-size: 16px; font-weight: 700; line-height: 1.25; }
+  .body-text { font-size: 13px; line-height: 1.65; }
+  .body-sm { font-size: 11px; line-height: 1.6; }
+  .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-mid); }
+  .stat-big { font-size: 64px; font-weight: 900; line-height: 1; letter-spacing: -0.02em; }
+
+  .text-white { color: var(--white); }
+  .text-black { color: var(--black); }
+  .text-gray { color: var(--gray-mid); }
+
+  /* Stat widget (floating) */
+  .stat-widget {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 20px 24px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .stat-widget-top { display: flex; align-items: center; gap: 8px; }
+  .avatar-stack { display: flex; }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 2px solid var(--white);
+    background: #8A9BAB;
+    margin-left: -8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; color: #fff;
+    overflow: hidden;
+  }
+  .avatar:first-child { margin-left: 0; }
+  .avatar-dot { background: #D0D0D0; }
+  .stat-num { font-size: 28px; font-weight: 900; color: var(--black); }
+  .stat-desc { font-size: 12px; font-style: italic; color: #444; line-height: 1.4; }
+
+  /* Donut chart */
+  .donut-wrap { display: flex; align-items: center; gap: 16px; }
+  .donut {
+    width: 120px; height: 120px; flex-shrink: 0;
+    border-radius: 50%;
+    background: conic-gradient(#1E1E1E 0% 60%, #CCCCCC 60% 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .donut::after {
+    content: ''; position: absolute;
+    width: 76px; height: 76px; border-radius: 50%;
+    background: var(--white);
+  }
+  .donut-label {
+    position: relative; z-index: 1;
+    font-size: 20px; font-weight: 900; color: var(--black);
+  }
+  .donut-text { font-size: 20px; font-weight: 900; line-height: 1.15; }
+
+  /* Vertical separator */
+  .v-rule { width: 1px; background: #444; align-self: stretch; }
+  .v-rule-light { background: #CCCCCC; }
+
+  /* Team portrait card */
+  .portrait-card {
+    border-radius: var(--card-radius);
+    background: #2A2A2A;
+    border: 1px solid #444;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .portrait-img { flex: 1; background: #4A5560; min-height: 0; }
+  .portrait-info { padding: 12px 14px; background: #2A2A2A; }
+
+  /* Bar chart */
+  .bar-chart { display: flex; gap: 20px; align-items: flex-end; }
+  .bar-group { display: flex; gap: 6px; align-items: flex-end; flex-direction: column; }
+  .bar-pair { display: flex; gap: 4px; align-items: flex-end; }
+  .bar { width: 60px; background: #888; border-radius: 4px 4px 0 0; }
+  .bar.dark { background: #222; }
+  .bar-label { font-size: 10px; color: var(--gray-mid); text-align: center; margin-top: 4px; }
+
+  /* Photo grid 2x2 */
+  .photo-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 10px; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <span style="color:#555;margin-right:8px">Gradient Pitch BW — 11 layouts</span>
+  <a href="#A">A·Cover</a>
+  <a href="#B">B·TOC</a>
+  <a href="#C">C·WhoWeAre</a>
+  <a href="#D">D·MarketInsights</a>
+  <a href="#E">E·Services</a>
+  <a href="#F">F·WhyChooseUs</a>
+  <a href="#G">G·OurTeam</a>
+  <a href="#H">H·OurPortfolio</a>
+  <a href="#I">I·OurPerformance</a>
+  <a href="#J">J·WhatsNext</a>
+  <a href="#K">K·ThankYou</a>
+</div>
+
+<!-- ═══════════════════════ A · Cover ═══════════════════════ -->
+<div class="slide-group" id="A">
+  <div class="slide-label">A — Cover (Light)</div>
+  <div class="slide-scroll">
+  <div class="slide light">
+    <!-- Left: skyscraper photo bleed -->
+    <div class="photo no-radius" style="position:absolute;top:0;left:0;width:440px;height:100%;border-radius:0;background:linear-gradient(135deg,#6A7A8A,#9AAABB);">
+      <span>Building Photo</span>
+    </div>
+    <!-- Header bar -->
+    <div class="hdr-light">
+      <div class="hdr-logo">
+        <div class="hdr-logo-icon" style="margin-left:440px;">S</div>
+        <span style="margin-left:440px;">Salford &amp; Co.</span>
+      </div>
+      <div class="hdr-date">August 2025</div>
+    </div>
+    <div class="hdr-rule"></div>
+    <!-- Main content -->
+    <div style="position:absolute;top:100px;left:490px;right:52px;bottom:52px;">
+      <div class="display text-black" style="margin-top:90px;">PITCH DECK</div>
+      <div style="font-size:36px;font-weight:400;color:#333;margin-top:8px;">Business Presentation</div>
+      <!-- Presenter info -->
+      <div style="margin-top:48px;">
+        <div class="body-sm text-gray">Presented by :</div>
+        <div style="font-size:14px;font-weight:700;color:var(--black);margin-top:2px;">Daniel Gallego</div>
+        <div class="body-sm text-gray" style="margin-top:10px;">Website :</div>
+        <div style="font-size:14px;font-weight:700;color:var(--black);margin-top:2px;">www.reallygreatsite.com</div>
+      </div>
+      <!-- Floating stat widget -->
+      <div class="stat-widget" style="position:absolute;bottom:0;right:0;width:380px;">
+        <div class="stat-widget-top">
+          <div class="avatar-stack">
+            <div class="avatar">P1</div>
+            <div class="avatar">P2</div>
+            <div class="avatar avatar-dot"></div>
+          </div>
+          <div class="stat-num">+25k</div>
+        </div>
+        <div class="stat-desc">Partner with us in creating solutions that don't just solve problems today, but open opportunities for tomorrow.</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ B · TOC ═══════════════════════ -->
+<div class="slide-group" id="B">
+  <div class="slide-label">B — Table of Contents (Light + Dark cards)</div>
+  <div class="slide-scroll">
+  <div class="slide light">
+    <!-- Left: heading + TOC list -->
+    <div style="position:absolute;top:60px;left:52px;width:430px;bottom:52px;">
+      <div class="display-sm text-black" style="margin-top:20px;">LIST OF<br>CONTENTS</div>
+      <!-- Divider -->
+      <div style="margin-top:28px;display:flex;gap:24px;">
+        <!-- Col 1 -->
+        <div style="display:flex;flex-direction:column;gap:16px;flex:1;">
+          <div>
+            <div style="font-size:24px;font-weight:900;color:var(--black);">01</div>
+            <div class="body-text text-black">Who We Are?</div>
+          </div>
+          <div>
+            <div style="font-size:24px;font-weight:900;color:var(--black);">02</div>
+            <div class="body-text text-black">Market Insights</div>
+          </div>
+          <div>
+            <div style="font-size:24px;font-weight:900;color:var(--black);">03</div>
+            <div class="body-text text-black">Services We Offer</div>
+          </div>
+          <div>
+            <div style="font-size:24px;font-weight:900;color:var(--black);">04</div>
+            <div class="body-text text-black">Why Choose Us?</div>
+          </div>
+        </div>
+        <!-- Vertical rule -->
+        <div class="v-rule v-rule-light" style="margin: 0 4px;"></div>
+        <!-- Col 2 -->
+        <div style="display:flex;flex-direction:column;gap:16px;flex:1;">
+          <div>
+            <div style="font-size:24px;font-weight:900;color:var(--black);">05</div>
+            <div class="body-text text-black">Our Team</div>
+          </div>
+          <div>
+            <div style="font-size:24px;font-weight:900;color:var(--black);">06</div>
+            <div class="body-text text-black">Our Portfolio</div>
+          </div>
+          <div>
+            <div style="font-size:24px;font-weight:900;color:var(--black);">07</div>
+            <div class="body-text text-black">Our Performance</div>
+          </div>
+          <div>
+            <div style="font-size:24px;font-weight:900;color:var(--black);">08</div>
+            <div class="body-text text-black">What's Next for Us?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Center: white rounded photo card -->
+    <div style="position:absolute;top:60px;left:500px;width:310px;bottom:60px;">
+      <div class="card card-white" style="height:100%;padding:12px;">
+        <div class="photo" style="width:100%;height:100%;border-radius:16px;background:linear-gradient(160deg,#7A8A96,#4A5C6A);">
+          <span style="font-size:10px;">Business Photo</span>
+        </div>
+      </div>
+    </div>
+    <!-- Right: dark rounded text card -->
+    <div style="position:absolute;top:60px;left:830px;right:52px;bottom:60px;">
+      <div class="card card-dark" style="height:100%;display:flex;flex-direction:column;justify-content:flex-end;">
+        <div class="photo dark-photo" style="flex:1;border-radius:14px;margin-bottom:12px;">
+          <span style="font-size:10px;">Dark Photo</span>
+        </div>
+        <div class="body-sm text-white" style="font-style:italic;line-height:1.6;">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus hendrerit augue blandit, ut posuere erat aliquam.
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ C · Who We Are ═══════════════════════ -->
+<div class="slide-group" id="C">
+  <div class="slide-label">C — Who We Are (Dark)</div>
+  <div class="slide-scroll">
+  <div class="slide dark">
+    <!-- Left: rounded photo -->
+    <div style="position:absolute;top:52px;left:52px;width:440px;bottom:180px;">
+      <div class="photo dark-photo" style="width:100%;height:100%;">Building Photo</div>
+    </div>
+    <!-- Right: heading + body + 2 cards -->
+    <div style="position:absolute;top:52px;left:520px;right:52px;bottom:52px;display:flex;flex-direction:column;gap:16px;">
+      <div class="display text-white" style="font-size:80px;">WHO WE<br>ARE</div>
+      <div class="body-text text-white" style="opacity:0.75;max-width:640px;">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus hendrerit augue blandit, ut posuere erat aliquam.
+      </div>
+      <!-- 2 cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:auto;">
+        <div class="card card-white">
+          <div class="subheading text-black" style="margin-bottom:10px;">Our Vision</div>
+          <div class="body-sm text-black" style="opacity:0.75;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam.</div>
+        </div>
+        <div class="card card-dark" style="border:1px solid #444;">
+          <div class="subheading text-white" style="margin-bottom:10px;">Our Mission</div>
+          <div class="body-sm text-white" style="opacity:0.7;">
+            <div style="display:flex;gap:6px;margin-bottom:6px;"><span>•</span><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></div>
+            <div style="display:flex;gap:6px;"><span>•</span><span>Maecenas varius lectus hendrerit augue blandit, ut posuere erat aliquam.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ D · Market Insights ═══════════════════════ -->
+<div class="slide-group" id="D">
+  <div class="slide-label">D — Market Insights (Dark)</div>
+  <div class="slide-scroll">
+  <div class="slide dark">
+    <!-- Top: 3-col row -->
+    <div style="position:absolute;top:40px;left:52px;right:52px;height:290px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+      <!-- Photo 1 -->
+      <div class="photo dark-photo" style="border-radius:var(--card-radius);">Photo 1</div>
+      <!-- Photo 2 -->
+      <div class="photo dark-photo">Photo 2</div>
+      <!-- Donut chart card -->
+      <div class="card card-white" style="display:flex;align-items:center;gap:16px;">
+        <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+          <div class="donut">
+            <div class="donut-label">60%</div>
+          </div>
+        </div>
+        <div class="donut-text text-black" style="font-size:18px;font-weight:900;line-height:1.2;">of buyers<br>prioritize<br>authentic<br>content.</div>
+      </div>
+    </div>
+    <!-- Bottom: heading + 2-col body -->
+    <div style="position:absolute;bottom:40px;left:52px;right:52px;height:290px;display:grid;grid-template-columns:auto 1fr 1fr;gap:32px;align-items:center;">
+      <div class="display-sm text-white" style="font-size:64px;">MARKET<br>INSIGHTS</div>
+      <div class="body-text text-white" style="opacity:0.75;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus hendrerit augue blandit.</div>
+      <div class="body-text text-white" style="opacity:0.75;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus hendrerit augue blandit.</div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ E · Services We Offer ═══════════════════════ -->
+<div class="slide-group" id="E">
+  <div class="slide-label">E — Services We Offer (Light)</div>
+  <div class="slide-scroll">
+  <div class="slide light">
+    <!-- Left: photo (top partial) + heading + body -->
+    <div style="position:absolute;top:0;left:52px;width:440px;bottom:52px;">
+      <div class="photo" style="width:100%;height:220px;border-radius:0 0 var(--card-radius) var(--card-radius);margin-bottom:0;border-radius:var(--card-radius);">Office Meeting Photo</div>
+      <div style="margin-top:20px;">
+        <div class="display-sm text-black" style="font-size:56px;">SERVICES<br>WE OFFER</div>
+        <div class="body-text text-black" style="opacity:0.75;margin-top:12px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus hendrerit.</div>
+        <div class="body-text text-black" style="opacity:0.75;margin-top:10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus hendrerit.</div>
+      </div>
+    </div>
+    <!-- Right: photo bg + 3 stacked service cards -->
+    <div style="position:absolute;top:0;left:520px;right:0;height:100%;position:absolute;">
+      <div class="photo" style="position:absolute;inset:0;border-radius:0;width:100%;height:100%;">Team Photo</div>
+      <!-- Stacked service cards -->
+      <div style="position:absolute;top:52px;right:52px;width:380px;display:flex;flex-direction:column;gap:12px;">
+        <div class="card card-black">
+          <div class="subheading text-white" style="margin-bottom:8px;">Service 01</div>
+          <div class="body-sm text-white" style="opacity:0.75;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam.</div>
+        </div>
+        <div class="card card-white">
+          <div class="subheading text-black" style="margin-bottom:8px;">Service 02</div>
+          <div class="body-sm text-black" style="opacity:0.75;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam.</div>
+        </div>
+        <div class="card card-black">
+          <div class="subheading text-white" style="margin-bottom:8px;">Service 03</div>
+          <div class="body-sm text-white" style="opacity:0.75;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ F · Why Choose Us? ═══════════════════════ -->
+<div class="slide-group" id="F">
+  <div class="slide-label">F — Why Choose Us? (Light)</div>
+  <div class="slide-scroll">
+  <div class="slide light">
+    <!-- Left: heading + body + 2 benefit cards -->
+    <div style="position:absolute;top:52px;left:52px;width:480px;bottom:52px;display:flex;flex-direction:column;">
+      <div class="display-sm text-black" style="font-size:60px;">WHY<br>CHOOSE<br>US?</div>
+      <div class="body-text text-black" style="opacity:0.75;margin-top:14px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:auto;">
+        <div class="card card-white" style="box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+          <div class="subheading text-black" style="margin-bottom:8px;">Benefit 01</div>
+          <div class="body-sm text-black" style="opacity:0.75;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique.</div>
+        </div>
+        <div class="card card-black">
+          <div class="subheading text-white" style="margin-bottom:8px;">Benefit 01</div>
+          <div class="body-sm text-white" style="opacity:0.75;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique.</div>
+        </div>
+      </div>
+    </div>
+    <!-- Right: 2 photos (top medium, bottom large out-bleed) -->
+    <div style="position:absolute;top:40px;left:556px;right:0;bottom:0;">
+      <!-- Top photo (rounded) -->
+      <div class="photo" style="position:absolute;top:0;left:0;width:400px;height:280px;">Dashboard Photo</div>
+      <!-- Bottom photo (large, right edge bleed) -->
+      <div class="photo" style="position:absolute;bottom:0;right:0;width:660px;top:230px;border-radius:var(--card-radius) 0 0 var(--card-radius);">Meeting Photo</div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ G · Our Team ═══════════════════════ -->
+<div class="slide-group" id="G">
+  <div class="slide-label">G — Our Team (Dark)</div>
+  <div class="slide-scroll">
+  <div class="slide dark">
+    <!-- Top center: heading + body -->
+    <div style="position:absolute;top:52px;left:52px;right:52px;text-align:center;">
+      <div class="display text-white" style="font-size:100px;letter-spacing:-0.03em;">OUR TEAM</div>
+      <div class="body-text text-white" style="opacity:0.65;max-width:760px;margin:10px auto 0;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus hendrerit augue blandit, at varius purus.</div>
+    </div>
+    <!-- Bottom: 4 portrait cards -->
+    <div style="position:absolute;bottom:52px;left:52px;right:52px;height:340px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;">
+      <div class="portrait-card">
+        <div class="portrait-img photo dark-photo" style="border-radius:0;min-height:240px;">Daniel G.</div>
+        <div class="portrait-info">
+          <div style="font-size:13px;font-weight:700;color:var(--white);">Daniel Gallego</div>
+          <div style="font-size:11px;color:var(--gray-mid);margin-top:2px;">Founder</div>
+        </div>
+      </div>
+      <div class="portrait-card">
+        <div class="portrait-img photo dark-photo" style="border-radius:0;min-height:240px;">Drew F.</div>
+        <div class="portrait-info">
+          <div style="font-size:13px;font-weight:700;color:var(--white);">Drew Feig</div>
+          <div style="font-size:11px;color:var(--gray-mid);margin-top:2px;">Co-Founder</div>
+        </div>
+      </div>
+      <div class="portrait-card">
+        <div class="portrait-img photo dark-photo" style="border-radius:0;min-height:240px;">Ketut S.</div>
+        <div class="portrait-info">
+          <div style="font-size:13px;font-weight:700;color:var(--white);">Ketut Susilo</div>
+          <div style="font-size:11px;color:var(--gray-mid);margin-top:2px;">Marketing Manager</div>
+        </div>
+      </div>
+      <div class="portrait-card">
+        <div class="portrait-img photo dark-photo" style="border-radius:0;min-height:240px;">Cahaya D.</div>
+        <div class="portrait-info">
+          <div style="font-size:13px;font-weight:700;color:var(--white);">Cahaya Dewi</div>
+          <div style="font-size:11px;color:var(--gray-mid);margin-top:2px;">Digital Marketing</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ H · Our Portfolio ═══════════════════════ -->
+<div class="slide-group" id="H">
+  <div class="slide-label">H — Our Portfolio (Dark)</div>
+  <div class="slide-scroll">
+  <div class="slide dark">
+    <!-- Left: rounded photo -->
+    <div style="position:absolute;top:52px;left:52px;width:440px;bottom:52px;">
+      <div class="photo dark-photo" style="width:100%;height:100%;">Team Working Photo</div>
+    </div>
+    <!-- Right: heading + subheading + body + stat card -->
+    <div style="position:absolute;top:52px;left:520px;right:52px;bottom:52px;display:flex;flex-direction:column;gap:16px;">
+      <div class="display text-white" style="font-size:72px;">OUR<br>PORTFOLIO</div>
+      <div class="subheading text-white" style="margin-top:8px;">Transformative Campaigns</div>
+      <div class="body-text text-white" style="opacity:0.75;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus hendrerit augue blandit.</div>
+      <!-- Stat card -->
+      <div class="card card-white" style="margin-top:auto;display:flex;align-items:center;gap:20px;">
+        <div class="stat-big text-black">30%</div>
+        <div class="body-sm text-black" style="opacity:0.75;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus hendrerit.</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ I · Our Performance ═══════════════════════ -->
+<div class="slide-group" id="I">
+  <div class="slide-label">I — Our Performance (Light)</div>
+  <div class="slide-scroll">
+  <div class="slide light">
+    <!-- Top half: chart + stat card + photo -->
+    <div style="position:absolute;top:40px;left:52px;right:52px;height:300px;display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:start;">
+      <!-- Bar chart -->
+      <div style="padding:16px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:16px;margin-bottom:6px;font-size:11px;color:var(--gray-mid);">
+          <span>● Seri 1</span><span style="color:#222;">● Seri 2</span>
+        </div>
+        <!-- Chart bars -->
+        <div style="display:flex;align-items:flex-end;gap:0;height:200px;border-bottom:1px solid #CCCCCC;padding:0 8px;position:relative;">
+          <!-- Y axis labels -->
+          <div style="position:absolute;left:-24px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;font-size:9px;color:var(--gray-mid);">
+            <span>12</span><span>10</span><span>8</span><span>6</span><span>4</span><span>2</span><span>0</span>
+          </div>
+          <!-- Grid lines -->
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none;">
+            <div style="border-top:1px solid rgba(0,0,0,0.08);width:100%;"></div>
+            <div style="border-top:1px solid rgba(0,0,0,0.08);width:100%;"></div>
+            <div style="border-top:1px solid rgba(0,0,0,0.08);width:100%;"></div>
+            <div style="border-top:1px solid rgba(0,0,0,0.08);width:100%;"></div>
+            <div style="border-top:1px solid rgba(0,0,0,0.08);width:100%;"></div>
+            <div style="border-top:1px solid rgba(0,0,0,0.08);width:100%;"></div>
+          </div>
+          <!-- Item 1 bars -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0;flex:1;">
+            <div style="display:flex;align-items:flex-end;gap:6px;height:100%;">
+              <div style="width:48px;height:50%;background:#AAAAAA;border-radius:3px 3px 0 0;"></div>
+              <div style="width:48px;height:100%;background:#222;border-radius:3px 3px 0 0;"></div>
+            </div>
+            <div style="font-size:10px;color:var(--gray-mid);margin-top:4px;">Item 1</div>
+          </div>
+          <!-- Item 2 bars -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0;flex:1;">
+            <div style="display:flex;align-items:flex-end;gap:6px;height:100%;">
+              <div style="width:48px;height:67%;background:#AAAAAA;border-radius:3px 3px 0 0;"></div>
+              <div style="width:48px;height:100%;background:#222;border-radius:3px 3px 0 0;"></div>
+            </div>
+            <div style="font-size:10px;color:var(--gray-mid);margin-top:4px;">Item 2</div>
+          </div>
+        </div>
+      </div>
+      <!-- Dark stat card -->
+      <div class="card card-black" style="width:300px;align-self:center;">
+        <div class="stat-big text-white" style="font-size:56px;">60%</div>
+        <div class="body-sm text-white" style="opacity:0.7;font-style:italic;margin-top:10px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique.</div>
+      </div>
+      <!-- Right photo -->
+      <div class="photo" style="height:260px;align-self:center;">Photo</div>
+    </div>
+    <!-- Bottom half: heading + body -->
+    <div style="position:absolute;bottom:40px;left:52px;right:52px;height:280px;display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center;">
+      <div class="display text-black" style="font-size:68px;">OUR<br>PERFORMANCE</div>
+      <div class="body-text text-black" style="opacity:0.75;max-width:600px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus hendrerit augue blandit, ut posuere erat aliquam. Praesent auctor tellus eget nisl blandit.</div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ J · What's Next ═══════════════════════ -->
+<div class="slide-group" id="J">
+  <div class="slide-label">J — What's Next For Us? (Dark)</div>
+  <div class="slide-scroll">
+  <div class="slide dark">
+    <!-- Left: heading + body + white callout card -->
+    <div style="position:absolute;top:52px;left:52px;width:540px;bottom:52px;display:flex;flex-direction:column;gap:16px;">
+      <div class="display text-white" style="font-size:68px;">WHAT'S<br>NEXT FOR<br>US?</div>
+      <div class="body-text text-white" style="opacity:0.75;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus.</div>
+      <!-- White callout card -->
+      <div class="card card-white" style="margin-top:auto;">
+        <div class="body-text text-black" style="opacity:0.8;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque molestie nisl eu sem tristique, sit amet convallis ex aliquam. Maecenas varius lectus hendrerit augue blandit.</div>
+      </div>
+    </div>
+    <!-- Right: 2×2 photo grid -->
+    <div style="position:absolute;top:52px;left:612px;right:52px;bottom:52px;" class="photo-grid">
+      <div class="photo dark-photo" style="grid-column:1;grid-row:1;border-radius:var(--card-radius);">Photo 1</div>
+      <div class="photo dark-photo" style="grid-column:2;grid-row:1;border-radius:var(--card-radius);">Photo 2</div>
+      <div class="photo dark-photo" style="grid-column:1;grid-row:2;border-radius:var(--card-radius);">Photo 3</div>
+      <div class="photo dark-photo" style="grid-column:2;grid-row:2;border-radius:var(--card-radius);">Photo 4</div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ K · Thank You ═══════════════════════ -->
+<div class="slide-group" id="K">
+  <div class="slide-label">K — Thank You (Light) — mirror of Cover</div>
+  <div class="slide-scroll">
+  <div class="slide light">
+    <!-- Left: skyscraper photo bleed -->
+    <div class="photo no-radius" style="position:absolute;top:0;left:0;width:440px;height:100%;border-radius:0;background:linear-gradient(135deg,#6A7A8A,#9AAABB);">
+      <span>Building Photo</span>
+    </div>
+    <!-- Header bar -->
+    <div class="hdr-light">
+      <div class="hdr-logo" style="margin-left:440px;">
+        <div class="hdr-logo-icon">S</div>
+        <span>Salford &amp; Co.</span>
+      </div>
+      <div class="hdr-date">August 2025</div>
+    </div>
+    <div class="hdr-rule"></div>
+    <!-- Main content -->
+    <div style="position:absolute;top:100px;left:490px;right:52px;bottom:52px;">
+      <div class="display text-black" style="margin-top:60px;font-size:90px;">THANK YOU</div>
+      <div style="font-size:28px;font-weight:400;color:#333;margin-top:8px;">Let's Create Something Amazing Together</div>
+      <!-- Presenter info -->
+      <div style="margin-top:40px;">
+        <div class="body-sm text-gray">Presented by :</div>
+        <div style="font-size:14px;font-weight:700;color:var(--black);margin-top:2px;">Daniel Gallego</div>
+        <div class="body-sm text-gray" style="margin-top:10px;">Website :</div>
+        <div style="font-size:14px;font-weight:700;color:var(--black);margin-top:2px;">www.reallygreatsite.com</div>
+      </div>
+      <!-- Floating stat widget -->
+      <div class="stat-widget" style="position:absolute;bottom:0;right:0;width:380px;">
+        <div class="stat-widget-top">
+          <div class="avatar-stack">
+            <div class="avatar">P1</div>
+            <div class="avatar">P2</div>
+            <div class="avatar avatar-dot"></div>
+          </div>
+          <div class="stat-num">+25k</div>
+        </div>
+        <div class="stat-desc">Partner with us in creating solutions that don't just solve problems today, but open opportunities for tomorrow.</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+</body>
+</html>

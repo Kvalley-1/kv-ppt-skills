@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Guidelines — All Layouts Demo</title>
+<style>
+/* ─── DESIGN TOKENS ──────────────────────────────────────
+   Source: core-layouts/brand-guidelines/layout.md v1.0
+   Slide: 13.33" × 7.5" (16:9 LAYOUT_WIDE)
+──────────────────────────────────────────────────────── */
+:root {
+  --teal:   #2DDEC8;
+  --black:  #000000;
+  --white:  #FFFFFF;
+  --hbkg:   #0C0C0C;   /* nav bar bg */
+  --ink:    #1A1A1A;   /* body text */
+  --line:   #222222;   /* hairline */
+  --deep:   #0D3330;   /* deep teal swatch */
+  --pale:   #AAFAE5;   /* pale mint swatch */
+
+  /* layout constants (% of 13.33" wide × 7.5" tall) */
+  --hbar:    11.07%;   /* 0.83/7.5  – nav bar height */
+  --lm:       3.15%;   /* 0.42/13.33 – left margin */
+  --mid:     50.11%;   /* 6.68/13.33 – column midpoint */
+  --ct:      14.27%;   /* 1.07/7.5  – content top (below bar) */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: Arial, 'Helvetica Neue', sans-serif;
+  background: #111;
+  min-height: 100vh;
+  color: #fff;
+}
+
+/* ─── CHROME ─────────────────────────────────────── */
+#app-hdr {
+  background: #1c1c1c;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #333;
+}
+#app-hdr h1 { font-size: 13px; color: var(--teal); }
+#app-hdr small { font-size: 10px; color: #555; }
+
+#tabs {
+  display: flex;
+  overflow-x: auto;
+  background: #1a1a1a;
+  padding: 7px 12px;
+  gap: 5px;
+  border-bottom: 1px solid #333;
+  scrollbar-width: thin;
+}
+#tabs button {
+  background: #262626;
+  color: #999;
+  border: 1px solid #3a3a3a;
+  border-radius: 3px;
+  padding: 4px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s;
+}
+#tabs button.active {
+  background: var(--teal);
+  color: #000;
+  border-color: var(--teal);
+  font-weight: bold;
+}
+
+#slide-area {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#kbd-hint { font-size: 10px; color: #555; }
+
+/* ─── SLIDE CONTAINER ────────────────────────────── */
+.slide {
+  width: min(1200px, 100%);
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: 0 8px 32px rgba(0,0,0,.6);
+  display: none;
+}
+.slide.active { display: block; }
+
+/* ─── SHARED COMPONENTS ──────────────────────────── */
+
+/* Nav bar */
+.nb {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: var(--hbar);
+  background: var(--hbkg);
+  z-index: 10;
+}
+.nb .nl { /* nav left */
+  position: absolute;
+  left: var(--lm); top: 0; bottom: 0;
+  display: flex; align-items: center;
+  color: var(--teal); font-size: clamp(6px,1.05vw,14px);
+}
+.nb .nc { /* nav center */
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--teal); font-size: clamp(6px,1.05vw,14px);
+}
+.nb .nr { /* nav right */
+  position: absolute;
+  right: var(--lm); top: 0; bottom: 0;
+  display: flex; align-items: center;
+  color: var(--white); font-size: clamp(6px,1.05vw,14px);
+  font-weight: bold;
+}
+
+/* Page number */
+.pgn {
+  position: absolute;
+  right: var(--lm); bottom: 3.5%;
+  font-size: clamp(6px,1.3vw,18px);
+  font-weight: bold; color: var(--ink);
+}
+
+/* Photo placeholder */
+.ph {
+  position: absolute;
+  background: #c0c0c0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.ph::after {
+  content: 'PHOTO';
+  font-size: clamp(5px,0.85vw,12px);
+  color: #888; letter-spacing: .18em;
+}
+
+/* Hairline */
+.hl {
+  position: absolute;
+  height: 0.18%;
+  background: var(--line);
+}
+
+/* Display (big bold title) */
+.disp {
+  position: absolute;
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-weight: 900;
+  color: var(--black);
+  line-height: 1.0;
+}
+
+/* Item list row */
+.item-t { font-size: clamp(7px,1.75vw,24px); color: var(--teal); padding: .7% 0 .25%; }
+.item-d { font-size: clamp(5px,.97vw,13px); color: var(--ink); padding-bottom: .5%; }
+.item-l { height: .15%; background: var(--line); }
+
+/* Logo mark SVG — reused inline everywhere */
+/* viewBox "0 0 60 40": staircase of 3 blocks with door gap
+   Block A (top):    x=20 y=0  w=20 h=13
+   Block B (middle): x=8  y=12 w=44 h=13
+   Block C (bottom-left):  x=0 y=24 w=35 h=16
+   Block D (bottom-right): x=43 y=24 w=17 h=16
+   Gap between C and D = door cutout at bottom-center */
+
+/* ═══════════════════════════════════════════
+   01 COVER
+═══════════════════════════════════════════ */
+#s01 { background: var(--black); }
+
+#s01 .nb-cover {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: var(--hbar);
+  background: var(--hbkg);
+  z-index: 10;
+}
+#s01 .nb-logo {
+  position: absolute;
+  left: var(--lm); top: 0; bottom: 0;
+  display: flex; align-items: center;
+  gap: .5%; color: var(--white);
+  font-size: clamp(5px,.95vw,13px); font-weight: bold;
+}
+#s01 .nb-tag {
+  position: absolute;
+  right: var(--lm); top: 0; bottom: 0;
+  display: flex; align-items: center;
+  color: var(--white); font-size: clamp(5px,.88vw,12px);
+}
+
+/* Teal main block + right black strip */
+#s01 .cv-teal {
+  position: absolute;
+  top: var(--hbar); left: 0;
+  width: 91.52%; bottom: 0;   /* 12.20/13.33 */
+  background: var(--teal);
+}
+#s01 .cv-strip {
+  position: absolute;
+  top: var(--hbar); right: 0;
+  width: 8.48%; bottom: 0;   /* 1.13/13.33 */
+  background: var(--black);
+}
+
+/* Thin separator between BRAND and GUIDELINES */
+#s01 .cv-sep {
+  position: absolute;
+  top: 50.93%;               /* 3.82/7.5 */
+  left: 3.52%; right: 8.48%;
+  height: .2%; background: rgba(0,0,0,.28);
+}
+
+/* Titles */
+#s01 .t-brand {
+  top: 16%;                  /* 1.20/7.5 */
+  left: 3.52%; right: 9%;
+  font-size: clamp(22px,8vw,108px);
+}
+#s01 .t-guidelines {
+  top: 52.27%;               /* 3.92/7.5 */
+  left: 3.52%; right: 9%;
+  font-size: clamp(18px,7vw,95px);
+}
+
+/* ═══════════════════════════════════════════
+   02 ABOUT  (left photo + right text)
+═══════════════════════════════════════════ */
+#s02 .ph-l {
+  top: var(--ct); left: var(--lm);
+  width: 46.51%; height: 82.27%;  /* 6.20×6.17 */
+}
+#s02 .rt {
+  position: absolute;
+  top: 46.7%; left: 55.51%; right: var(--lm);  /* 3.50/7.5, 7.40/13.33 */
+  font-size: clamp(8px,2.4vw,32px);
+  color: var(--teal);
+}
+#s02 .hl-r { top: 55.7%; left: 55.51%; right: var(--lm); }
+#s02 .body-r {
+  position: absolute;
+  top: 57.6%; left: 55.51%; right: var(--lm);
+  font-size: clamp(5px,1vw,13px);
+  color: var(--ink); line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════════
+   03 CORE VALUES  (split: left title + right photo + items)
+═══════════════════════════════════════════ */
+#s03 .lm-tl {
+  position: absolute;
+  top: 15%; left: var(--lm);
+  height: 14%;               /* Large logo mark top-left */
+}
+#s03 .t-cv {
+  bottom: 5%; left: var(--lm); width: 43%;
+  font-size: clamp(14px,5.6vw,75px);
+}
+#s03 .ph-r {
+  top: var(--ct); left: var(--mid); right: var(--lm);
+  height: 40.67%;            /* 3.05/7.5 */
+}
+#s03 .items {
+  position: absolute;
+  top: 57.1%; left: var(--mid); right: var(--lm);
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════
+   04 VOICE & TONE  (left title + right photo + bottom text)
+═══════════════════════════════════════════ */
+#s04 .t-vt {
+  top: 20%; left: var(--lm); width: 46.51%;
+  font-size: clamp(14px,5.8vw,78px);
+}
+#s04 .ph-r {
+  top: var(--ct); left: 57.01%; right: var(--lm);  /* 7.60/13.33 */
+  height: 49.33%;            /* 3.70/7.5 */
+}
+#s04 .hl-b { top: 74.27%; left: var(--lm); right: var(--lm); }
+#s04 .body-b {
+  position: absolute;
+  top: 77%; left: var(--lm); width: 41.26%;
+  font-size: clamp(5px,1vw,13px);
+  color: var(--ink); line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════════
+   05 COMMUNICATION GUIDELINES  (full-width title + right items)
+═══════════════════════════════════════════ */
+#s05 .t-cg {
+  top: 18.67%; left: var(--lm); width: 63.76%;  /* 1.40/7.5, 8.50/13.33 */
+  font-size: clamp(12px,5.4vw,72px);
+}
+#s05 .items-r {
+  position: absolute;
+  top: 56.27%; left: 48.16%; right: var(--lm);  /* 6.42/13.33 */
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════
+   06 LOGO PAGE  (left photo + right logo word + mark + desc)
+═══════════════════════════════════════════ */
+#s06 .ph-l {
+  top: var(--ct); left: var(--lm);
+  width: 40%; height: 82.27%;
+}
+#s06 .logo-word {
+  position: absolute;
+  top: 36%; left: 52%;
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-weight: 900;
+  font-size: clamp(16px,5.5vw,72px);
+  color: var(--black);
+}
+#s06 .lm-r {
+  position: absolute;
+  top: 28%; right: 6%; height: 22%;
+}
+#s06 .body-r {
+  position: absolute;
+  top: 63%; left: 52%; right: var(--lm);
+  font-size: clamp(5px,1vw,13px);
+  color: var(--ink); line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════
+   07 LOGO VARIANTS  (3-column: primary / secondary / submark)
+═══════════════════════════════════════════ */
+#s07 .logo-grid {
+  position: absolute;
+  top: var(--ct); left: var(--lm); right: var(--lm); bottom: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+#s07 .lv {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 5%;
+  width: 28%;
+}
+#s07 .lv-label {
+  font-size: clamp(6px,1vw,14px); color: var(--ink);
+}
+#s07 .lv-horiz {
+  display: flex; align-items: center; gap: 6%;
+}
+#s07 .wordmark-h {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-weight: 900;
+  font-size: clamp(7px,1.4vw,19px);
+  color: var(--black); letter-spacing: .03em;
+}
+#s07 .wordmark-v {
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-weight: 900;
+  font-size: clamp(7px,1.4vw,19px);
+  color: var(--black); text-align: center; line-height: 1.2;
+}
+
+/* ═══════════════════════════════════════════
+   08 COLOR PALETTE  (left title + desc + right photo)
+═══════════════════════════════════════════ */
+#s08 .t-cp {
+  top: 18%; left: var(--lm); width: 46%;
+  font-size: clamp(14px,5.5vw,72px);
+}
+#s08 .hl-cp { top: 78%; left: var(--lm); width: 46%; }
+#s08 .body-cp {
+  position: absolute;
+  top: 80%; left: var(--lm); width: 46%;
+  font-size: clamp(5px,1vw,13px);
+  color: var(--ink); line-height: 1.65;
+}
+#s08 .ph-r {
+  top: var(--ct); left: 65.11%; right: var(--lm);
+  height: 80%;
+}
+
+/* ═══════════════════════════════════════════
+   09 PRIMARY COLORS  (label + separator + 4 swatches)
+═══════════════════════════════════════════ */
+#s09 .pc-label {
+  position: absolute;
+  top: 16%; left: var(--lm);
+  font-size: clamp(6px,1.1vw,15px); color: var(--ink);
+}
+#s09 .hl-pc { top: 22.5%; left: var(--lm); right: var(--lm); }
+#s09 .swatches {
+  position: absolute;
+  top: 28%; left: var(--lm); right: var(--lm); bottom: 10%;
+  display: flex; gap: 2%;
+}
+#s09 .sw { flex: 1; border-radius: 2px; }
+
+/* ═══════════════════════════════════════════
+   10 LOGO ON BACKGROUNDS  (2×2 brand grid)
+═══════════════════════════════════════════ */
+#s10 .grid22 {
+  position: absolute;
+  top: var(--ct); left: 5.63%; right: var(--lm); bottom: 3%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+#s10 .bc {
+  display: flex; align-items: center; justify-content: center;
+}
+#s10 .logo-h {
+  display: flex; align-items: center; gap: 5%;
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-weight: 900;
+  font-size: clamp(6px,1.2vw,16px);
+  letter-spacing: .05em;
+}
+</style>
+</head>
+<body>
+
+<div id="app-hdr">
+  <h1>Brand Guidelines Presentation — All Layouts Demo</h1>
+  <small>core-layouts/brand-guidelines · 10 slides · Step 3 入庫產物</small>
+</div>
+
+<div id="tabs">
+  <button class="tab active" onclick="show(0)">01 Cover</button>
+  <button class="tab" onclick="show(1)">02 About</button>
+  <button class="tab" onclick="show(2)">03 Core Values</button>
+  <button class="tab" onclick="show(3)">04 Voice &amp; Tone</button>
+  <button class="tab" onclick="show(4)">05 Comm. Guidelines</button>
+  <button class="tab" onclick="show(5)">06 Logo</button>
+  <button class="tab" onclick="show(6)">07 Logo Variants</button>
+  <button class="tab" onclick="show(7)">08 Color Palette</button>
+  <button class="tab" onclick="show(8)">09 Primary Colors</button>
+  <button class="tab" onclick="show(9)">10 Logo on BG</button>
+</div>
+
+<div id="slide-area">
+<span id="kbd-hint">← → 鍵盤切換</span>
+
+<!-- ══════════════ SLIDE 01 — COVER ══════════════ -->
+<section class="slide active" id="s01">
+  <div class="nb-cover">
+    <div class="nb-logo">
+      <svg viewBox="0 0 60 40" height="55%" fill="#2DDEC8">
+        <rect x="20" y="0" width="20" height="13"/>
+        <rect x="8"  y="12" width="44" height="13"/>
+        <rect x="0"  y="24" width="35" height="16"/>
+        <rect x="43" y="24" width="17" height="16"/>
+      </svg>
+      QUALITY OUTLET
+    </div>
+    <div class="nb-tag">A framework for consistent brand presentation</div>
+  </div>
+  <div class="cv-teal"></div>
+  <div class="cv-strip"></div>
+  <div class="cv-sep"></div>
+  <div class="disp t-brand">BRAND</div>
+  <div class="disp t-guidelines">GUIDELINES</div>
+</section>
+
+<!-- ══════════════ SLIDE 02 — ABOUT ══════════════ -->
+<section class="slide" id="s02">
+  <div class="nb">
+    <div class="nl">Brand Guidelines</div>
+    <div class="nc">Quality Outlet</div>
+    <div class="nr">2030</div>
+  </div>
+  <div class="ph ph-l"></div>
+  <div class="rt">About the brand</div>
+  <div class="hl hl-r"></div>
+  <div class="body-r">
+    Introduce the client and the importance of maintaining its branding
+    across different channels. Briefly outline how the brand guidelines
+    were put together and encourage readers to observe them to help
+    create a seamless brand experience for customers.
+  </div>
+  <div class="pgn">02</div>
+</section>
+
+<!-- ══════════════ SLIDE 03 — CORE VALUES ══════════════ -->
+<section class="slide" id="s03">
+  <div class="nb">
+    <div class="nl">Brand Guidelines</div>
+    <div class="nc">Quality Outlet</div>
+    <div class="nr">2030</div>
+  </div>
+  <!-- Large logo mark — top left -->
+  <div class="lm-tl">
+    <svg viewBox="0 0 60 40" height="100%" fill="#2DDEC8">
+      <rect x="20" y="0" width="20" height="13"/>
+      <rect x="8"  y="12" width="44" height="13"/>
+      <rect x="0"  y="24" width="35" height="16"/>
+      <rect x="43" y="24" width="17" height="16"/>
+    </svg>
+  </div>
+  <div class="disp t-cv">CORE<br>VALUES</div>
+  <div class="ph ph-r"></div>
+  <div class="items">
+    <div class="item-t">Creativity</div>
+    <div class="item-d">Write a brief description of the core value here.</div>
+    <div class="item-l"></div>
+    <div class="item-t">Integrity</div>
+    <div class="item-d">Write a brief description of the core value here.</div>
+    <div class="item-l"></div>
+    <div class="item-t">Accessibility</div>
+    <div class="item-d">Write a brief description of the core value here.</div>
+    <div class="item-l"></div>
+  </div>
+  <div class="pgn">03</div>
+</section>
+
+<!-- ══════════════ SLIDE 04 — VOICE & TONE ══════════════ -->
+<section class="slide" id="s04">
+  <div class="nb">
+    <div class="nl">Brand Guidelines</div>
+    <div class="nc">Quality Outlet</div>
+    <div class="nr">2030</div>
+  </div>
+  <div class="disp t-vt">VOICE &amp;<br>TONE</div>
+  <div class="ph ph-r"></div>
+  <div class="hl hl-b"></div>
+  <div class="body-b">Establish how your client will sound on different communication platforms.</div>
+  <div class="pgn">04</div>
+</section>
+
+<!-- ══════════════ SLIDE 05 — COMMUNICATION GUIDELINES ══════════════ -->
+<section class="slide" id="s05">
+  <div class="nb">
+    <div class="nl">Brand Guidelines</div>
+    <div class="nc">Quality Outlet</div>
+    <div class="nr">2030</div>
+  </div>
+  <div class="disp t-cg">COMMUNICATION<br>GUIDELINES</div>
+  <div class="items-r">
+    <div class="item-t">Be warm and courteous.</div>
+    <div class="item-d">Write a brief description of the guideline here.</div>
+    <div class="item-l"></div>
+    <div class="item-t">Be thoughtful and truthful.</div>
+    <div class="item-d">Write a brief description of the guideline here.</div>
+    <div class="item-l"></div>
+    <div class="item-t">Be clear and concise.</div>
+    <div class="item-d">Write a brief description of the guideline here.</div>
+    <div class="item-l"></div>
+  </div>
+  <div class="pgn">05</div>
+</section>
+
+<!-- ══════════════ SLIDE 06 — LOGO ══════════════ -->
+<section class="slide" id="s06">
+  <div class="nb">
+    <div class="nl">Brand Guidelines</div>
+    <div class="nc">Quality Outlet</div>
+    <div class="nr">2030</div>
+  </div>
+  <div class="ph ph-l"></div>
+  <div class="logo-word">LOGO</div>
+  <div class="lm-r">
+    <svg viewBox="0 0 60 40" height="100%" fill="#2DDEC8">
+      <rect x="20" y="0" width="20" height="13"/>
+      <rect x="8"  y="12" width="44" height="13"/>
+      <rect x="0"  y="24" width="35" height="16"/>
+      <rect x="43" y="24" width="17" height="16"/>
+    </svg>
+  </div>
+  <div class="body-r">
+    Briefly explain the concept behind the logo.
+    Include tips on how to best use the logo.
+  </div>
+  <div class="pgn">06</div>
+</section>
+
+<!-- ══════════════ SLIDE 07 — LOGO VARIANTS ══════════════ -->
+<section class="slide" id="s07">
+  <div class="nb">
+    <div class="nl">Brand Guidelines</div>
+    <div class="nc">Quality Outlet</div>
+    <div class="nr">2030</div>
+  </div>
+  <div class="logo-grid">
+    <!-- Primary: stacked icon + 2-line wordmark -->
+    <div class="lv">
+      <svg viewBox="0 0 60 40" height="20%" fill="#2DDEC8">
+        <rect x="20" y="0" width="20" height="13"/>
+        <rect x="8"  y="12" width="44" height="13"/>
+        <rect x="0"  y="24" width="35" height="16"/>
+        <rect x="43" y="24" width="17" height="16"/>
+      </svg>
+      <div class="wordmark-v">QUALITY<br>OUTLET</div>
+      <div class="lv-label">Primary logo</div>
+    </div>
+    <!-- Secondary: inline icon + 1-line wordmark -->
+    <div class="lv">
+      <div class="lv-horiz">
+        <svg viewBox="0 0 60 40" height="14%" fill="#2DDEC8">
+          <rect x="20" y="0" width="20" height="13"/>
+          <rect x="8"  y="12" width="44" height="13"/>
+          <rect x="0"  y="24" width="35" height="16"/>
+          <rect x="43" y="24" width="17" height="16"/>
+        </svg>
+        <div class="wordmark-h">QUALITY OUTLET</div>
+      </div>
+      <div class="lv-label">Secondary logo</div>
+    </div>
+    <!-- Submark: large icon only -->
+    <div class="lv">
+      <svg viewBox="0 0 60 40" height="28%" fill="#2DDEC8">
+        <rect x="20" y="0" width="20" height="13"/>
+        <rect x="8"  y="12" width="44" height="13"/>
+        <rect x="0"  y="24" width="35" height="16"/>
+        <rect x="43" y="24" width="17" height="16"/>
+      </svg>
+      <div class="lv-label">Submark logo</div>
+    </div>
+  </div>
+  <div class="pgn">07</div>
+</section>
+
+<!-- ══════════════ SLIDE 08 — COLOR PALETTE ══════════════ -->
+<section class="slide" id="s08">
+  <div class="nb">
+    <div class="nl">Brand Guidelines</div>
+    <div class="nc">Quality Outlet</div>
+    <div class="nr">2030</div>
+  </div>
+  <div class="disp t-cp">COLOR<br>PALETTE</div>
+  <div class="hl hl-cp"></div>
+  <div class="body-cp">Describe your brand's primary and supporting colors and how they can enhance your content.</div>
+  <div class="ph ph-r"></div>
+  <div class="pgn">08</div>
+</section>
+
+<!-- ══════════════ SLIDE 09 — PRIMARY COLORS ══════════════ -->
+<section class="slide" id="s09">
+  <div class="nb">
+    <div class="nl">Brand Guidelines</div>
+    <div class="nc">Quality Outlet</div>
+    <div class="nr">2030</div>
+  </div>
+  <div class="pc-label">Primary colors</div>
+  <div class="hl hl-pc"></div>
+  <div class="swatches">
+    <div class="sw" style="background:#0D3330;"></div>
+    <div class="sw" style="background:#1DC8B0;"></div>
+    <div class="sw" style="background:#2DDEC8;"></div>
+    <div class="sw" style="background:#AAFAE5;"></div>
+  </div>
+  <div class="pgn">09</div>
+</section>
+
+<!-- ══════════════ SLIDE 10 — LOGO ON BACKGROUNDS ══════════════ -->
+<section class="slide" id="s10">
+  <div class="nb">
+    <div class="nl">Brand Guidelines</div>
+    <div class="nc">Quality Outlet</div>
+    <div class="nr">2030</div>
+  </div>
+  <div class="grid22">
+    <!-- teal bg, black logo+text -->
+    <div class="bc" style="background:#2DDEC8;">
+      <div class="logo-h" style="color:#000;">
+        <svg viewBox="0 0 60 40" height="22px" fill="#000">
+          <rect x="20" y="0" width="20" height="13"/>
+          <rect x="8"  y="12" width="44" height="13"/>
+          <rect x="0"  y="24" width="35" height="16"/>
+          <rect x="43" y="24" width="17" height="16"/>
+        </svg>
+        QUALITY OUTLET
+      </div>
+    </div>
+    <!-- black bg, teal logo+text -->
+    <div class="bc" style="background:#000;">
+      <div class="logo-h" style="color:#2DDEC8;">
+        <svg viewBox="0 0 60 40" height="22px" fill="#2DDEC8">
+          <rect x="20" y="0" width="20" height="13"/>
+          <rect x="8"  y="12" width="44" height="13"/>
+          <rect x="0"  y="24" width="35" height="16"/>
+          <rect x="43" y="24" width="17" height="16"/>
+        </svg>
+        QUALITY OUTLET
+      </div>
+    </div>
+    <!-- deep teal bg, teal logo -->
+    <div class="bc" style="background:#0D3330;">
+      <div class="logo-h" style="color:#2DDEC8;">
+        <svg viewBox="0 0 60 40" height="22px" fill="#2DDEC8">
+          <rect x="20" y="0" width="20" height="13"/>
+          <rect x="8"  y="12" width="44" height="13"/>
+          <rect x="0"  y="24" width="35" height="16"/>
+          <rect x="43" y="24" width="17" height="16"/>
+        </svg>
+        QUALITY OUTLET
+      </div>
+    </div>
+    <!-- pale mint bg, black logo -->
+    <div class="bc" style="background:#AAFAE5;">
+      <div class="logo-h" style="color:#000;">
+        <svg viewBox="0 0 60 40" height="22px" fill="#000">
+          <rect x="20" y="0" width="20" height="13"/>
+          <rect x="8"  y="12" width="44" height="13"/>
+          <rect x="0"  y="24" width="35" height="16"/>
+          <rect x="43" y="24" width="17" height="16"/>
+        </svg>
+        QUALITY OUTLET
+      </div>
+    </div>
+  </div>
+  <div class="pgn">10</div>
+</section>
+
+</div><!-- /slide-area -->
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const tabs   = document.querySelectorAll('.tab');
+
+function show(n) {
+  slides.forEach((s, i) => s.classList.toggle('active', i === n));
+  tabs.forEach((t, i) => t.classList.toggle('active', i === n));
+}
+
+document.addEventListener('keydown', e => {
+  const cur = [...slides].findIndex(s => s.classList.contains('active'));
+  if (e.key === 'ArrowRight' && cur < slides.length - 1) show(cur + 1);
+  if (e.key === 'ArrowLeft'  && cur > 0)                 show(cur - 1);
+});
+</script>
+</body>
+</html>

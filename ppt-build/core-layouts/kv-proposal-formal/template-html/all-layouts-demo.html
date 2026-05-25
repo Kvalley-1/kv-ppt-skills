@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<title>kv-proposal-formal — All Layouts Demo (14 Layouts)</title>
+<style>
+/* ── Design Tokens ──────────────────────────────── */
+:root {
+  --navy:        #1A1A2E;
+  --navy-mid:    #22223A;
+  --navy-deep:   #1F4E79;
+  --navy-dark:   #11112A;
+  --lime:        #C4D600;
+  --amber:       #F09C29;
+  --pink:        #E91E63;
+  --blue:        #3F7FBF;
+  --bg:          #F5F5F7;
+  --gray-dark:   #333333;
+  --gray-mid:    #666666;
+  --gray-light:  #BBBBBB;
+  --white:       #FFFFFF;
+}
+
+/* ── Page Shell ─────────────────────────────────── */
+body {
+  margin: 0;
+  padding: 40px;
+  background: #1E1E1E;
+  font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+}
+.layout-label {
+  color: #888;
+  font-family: monospace;
+  font-size: 12px;
+  margin: 32px 0 6px;
+  letter-spacing: 0.05em;
+}
+.layout-label:first-of-type { margin-top: 0; }
+
+/* ── Slide Base ─────────────────────────────────── */
+.slide {
+  width: 1200px;
+  height: 675px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+  margin-bottom: 8px;
+}
+
+/* ── Shared KV Logo (top-right) ─────────────────── */
+.kv-logo {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.kv-k {
+  width: 36px;
+  height: 36px;
+  background: var(--lime);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+  flex-shrink: 0;
+}
+.kv-text { display: flex; flex-direction: column; justify-content: center; }
+.kv-company { font-size: 12px; line-height: 1.3; color: var(--navy); }
+.kv-since   { font-size: 10px; color: var(--gray-mid); }
+.kv-logo.on-dark .kv-company { color: var(--white); }
+.kv-logo.on-dark .kv-since   { color: var(--gray-light); }
+
+/* ── Page Number ─────────────────────────────────── */
+.pg-num {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  color: var(--gray-mid);
+}
+
+/* ── Standard Slide Header (light slides) ───────── */
+.std-header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 95px;
+}
+.lime-bar {
+  position: absolute;
+  left: 45px;
+  top: 50px;
+  width: 9px;
+  height: 68px;
+  background: var(--lime);
+}
+.std-title {
+  position: absolute;
+  left: 68px;
+  top: 34px;
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1;
+}
+.std-en {
+  position: absolute;
+  left: 68px;
+  top: 84px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  color: var(--gray-mid);
+}
+
+
+/* ═══════════════════════════════════════════════════
+   L01 · COVER
+   ════════════════════════════════════════════════════ */
+.slide-cover {
+  background: var(--navy);
+}
+.slide-cover .corner-tl {
+  position: absolute;
+  top: 0; left: 0;
+  width: 270px; height: 270px;
+  background: var(--lime);
+}
+.slide-cover .corner-br {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 270px; height: 270px;
+  background: var(--lime);
+}
+.slide-cover .cover-content {
+  position: absolute;
+  left: 135px;
+  top: 135px;
+}
+.slide-cover .cover-client {
+  font-size: 22px;
+  color: var(--gray-light);
+  margin-bottom: 8px;
+}
+.slide-cover .cover-title {
+  font-size: 65px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+.slide-cover .cover-divider {
+  width: 40px;
+  height: 3px;
+  background: var(--lime);
+  margin-bottom: 14px;
+}
+.slide-cover .cover-option {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+.slide-cover .cover-option.lime { color: var(--lime); }
+.slide-cover .cover-option.light { color: #AACCFF; }
+.slide-cover .cover-footer {
+  position: absolute;
+  left: 135px;
+  bottom: 130px;
+}
+.slide-cover .cover-presenter {
+  font-size: 13px;
+  color: var(--gray-light);
+  margin-bottom: 4px;
+}
+.slide-cover .cover-date {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ═══════════════════════════════════════════════════
+   L02 · TABLE OF CONTENTS
+   ════════════════════════════════════════════════════ */
+.slide-toc .toc-list {
+  position: absolute;
+  left: 45px;
+  top: 110px;
+  width: 1110px;
+  height: 540px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 12px 30px;
+}
+.slide-toc .toc-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border-left: 4px solid var(--lime);
+}
+.slide-toc .toc-ch {
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lime);
+  white-space: nowrap;
+  min-width: 36px;
+}
+.slide-toc .toc-name {
+  font-size: 15px;
+  color: var(--navy);
+  font-weight: 600;
+  flex: 1;
+}
+.slide-toc .toc-pg {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: var(--gray-mid);
+}
+
+/* ═══════════════════════════════════════════════════
+   L03 · CHAPTER DIVIDER
+   ════════════════════════════════════════════════════ */
+.slide-chapter {
+  background: var(--navy);
+}
+.slide-chapter .corner-tl {
+  position: absolute;
+  top: 0; left: 0;
+  width: 225px; height: 225px;
+  background: var(--lime);
+}
+.slide-chapter .corner-br {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 225px; height: 225px;
+  background: var(--lime);
+}
+.slide-chapter .ch-num {
+  position: absolute;
+  left: 135px;
+  top: 207px;
+  font-family: Arial, sans-serif;
+  font-size: 200px;
+  font-weight: 900;
+  color: var(--lime);
+  line-height: 1;
+  opacity: 0.9;
+}
+.slide-chapter .ch-title {
+  position: absolute;
+  left: 135px;
+  top: 315px;
+  font-size: 43px;
+  font-weight: 700;
+  color: var(--white);
+}
+.slide-chapter .ch-en {
+  position: absolute;
+  left: 135px;
+  top: 396px;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  color: var(--gray-light);
+}
+.slide-chapter .ch-divider {
+  position: absolute;
+  left: 135px;
+  top: 450px;
+  width: 360px;
+  height: 2px;
+  background: rgba(255,255,255,0.2);
+}
+.slide-chapter .ch-tagline {
+  position: absolute;
+  left: 135px;
+  top: 468px;
+  font-size: 15px;
+  color: var(--white);
+  opacity: 0.85;
+}
+
+/* ═══════════════════════════════════════════════════
+   L04 · SPLIT CONTENT (Left + Right NAVY Panel)
+   ════════════════════════════════════════════════════ */
+.slide-split .right-panel {
+  position: absolute;
+  right: 0; top: 0;
+  width: 498px;
+  height: 675px;
+  background: var(--navy);
+}
+.slide-split .right-accent {
+  position: absolute;
+  left: 702px;
+  top: 180px;
+  width: 498px;
+  height: 7px;
+  background: var(--lime);
+}
+.slide-split .rh-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--lime);
+  margin-bottom: 4px;
+}
+.slide-split .rh-en {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: var(--gray-light);
+}
+.slide-split .right-bullets {
+  position: absolute;
+  left: 28px;
+  top: 95px;
+  width: 445px;
+}
+.slide-split .bullet-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.slide-split .bullet-dot {
+  width: 12px;
+  height: 12px;
+  background: var(--lime);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.slide-split .bullet-text {
+  font-size: 15px;
+  color: var(--white);
+  line-height: 1.5;
+}
+
+/* Left side: std header + option cards */
+.slide-split .left-intro {
+  position: absolute;
+  left: 68px;
+  top: 130px;
+  width: 600px;
+  font-size: 13px;
+  color: var(--gray-mid);
+  margin-bottom: 10px;
+}
+.slide-split .option-cards {
+  position: absolute;
+  left: 45px;
+  top: 155px;
+  width: 612px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.slide-split .option-card {
+  background: var(--bg);
+  border: none;
+}
+.slide-split .option-card-header {
+  padding: 8px 18px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.slide-split .option-card-header.lime { background: var(--lime); color: var(--navy); }
+.slide-split .option-card-header.blue { background: var(--navy-deep); color: var(--white); }
+.slide-split .option-card-meta {
+  padding: 6px 18px 4px;
+  font-size: 13px;
+  font-family: Arial, sans-serif;
+}
+.slide-split .option-card-meta.lime-text { color: var(--navy-deep); }
+.slide-split .option-card-meta.amber-text { color: var(--amber); }
+.slide-split .option-card-body {
+  padding: 4px 18px 14px;
+  font-size: 12px;
+  color: var(--gray-dark);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════════════════
+   L05 · DATA TABLE
+   ════════════════════════════════════════════════════ */
+.slide-table .content-table {
+  position: absolute;
+  left: 45px;
+  top: 110px;
+  width: 1110px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.slide-table .content-table th {
+  background: var(--navy);
+  color: var(--white);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+.slide-table .content-table td {
+  padding: 9px 14px;
+  color: var(--gray-dark);
+  border-bottom: 1px solid #E0E0E2;
+  border-right: 1px solid #E8E8EA;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.slide-table .content-table tr:nth-child(even) td {
+  background: #EBEBED;
+}
+.slide-table .content-table tr:nth-child(odd) td {
+  background: var(--white);
+}
+.slide-table .content-table .col-tag {
+  background: var(--lime) !important;
+  color: var(--navy);
+  font-weight: 700;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.slide-table .table-note {
+  position: absolute;
+  left: 45px;
+  bottom: 25px;
+  font-size: 11px;
+  color: var(--gray-mid);
+}
+
+/* ═══════════════════════════════════════════════════
+   L06 · INFO GRID (2×2 KV Cards)
+   ════════════════════════════════════════════════════ */
+.slide-info-grid .grid-2x2 {
+  position: absolute;
+  left: 45px;
+  top: 110px;
+  width: 1110px;
+  height: 540px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 14px;
+}
+.slide-info-grid .info-card {
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+.slide-info-grid .info-card-header {
+  background: var(--lime);
+  color: var(--navy);
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 18px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+.slide-info-grid .info-card-body {
+  flex: 1;
+  padding: 14px 18px;
+  font-size: 15px;
+  color: var(--gray-dark);
+  line-height: 1.65;
+}
+.slide-info-grid .card-footnote {
+  position: absolute;
+  left: 45px;
+  bottom: 14px;
+  font-size: 12px;
+  color: var(--navy-deep);
+}
+
+/* ═══════════════════════════════════════════════════
+   L07 · COURSE DETAIL
+   ════════════════════════════════════════════════════ */
+.slide-course .course-header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 104px;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  padding: 0 45px;
+  gap: 20px;
+}
+.slide-course .course-code {
+  font-family: Arial, sans-serif;
+  font-size: 35px;
+  font-weight: 900;
+  color: var(--lime);
+  min-width: 70px;
+}
+.slide-course .course-title {
+  font-size: 33px;
+  font-weight: 700;
+  color: var(--white);
+  flex: 1;
+}
+.slide-course .course-duration {
+  background: var(--amber);
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 16px;
+  white-space: nowrap;
+}
+.slide-course .course-desc {
+  position: absolute;
+  left: 45px;
+  top: 122px;
+  width: 1110px;
+  font-size: 15px;
+  color: var(--gray-mid);
+  line-height: 1.6;
+}
+.slide-course .course-table {
+  position: absolute;
+  left: 45px;
+  top: 195px;
+  width: 1110px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.slide-course .course-table th {
+  background: var(--navy-deep);
+  color: var(--white);
+  padding: 9px 14px;
+  text-align: left;
+  font-size: 12px;
+}
+.slide-course .course-table td {
+  padding: 8px 14px;
+  border-bottom: 1px solid #E0E0E2;
+  color: var(--gray-dark);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.slide-course .course-table tr:nth-child(even) td { background: #EBEBED; }
+.slide-course .course-table tr:nth-child(odd) td  { background: var(--white); }
+
+/* ═══════════════════════════════════════════════════
+   L08 · ASSESSMENT FLOW (3-Step Horizontal)
+   ════════════════════════════════════════════════════ */
+.slide-flow .flow-intro {
+  position: absolute;
+  left: 54px;
+  top: 106px;
+  font-size: 13px;
+  color: var(--gray-mid);
+}
+.slide-flow .flow-boxes {
+  position: absolute;
+  left: 54px;
+  top: 130px;
+  width: 1100px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.slide-flow .flow-box {
+  flex: 1;
+  height: 162px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 18px;
+}
+.slide-flow .flow-box.blue-box { background: var(--blue); }
+.slide-flow .flow-box.amber-box { background: var(--amber); }
+.slide-flow .flow-box.lime-box { background: var(--lime); }
+.slide-flow .flow-box-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.slide-flow .flow-box-when {
+  font-size: 12px;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 8px;
+  font-family: Arial, sans-serif;
+}
+.slide-flow .flow-box-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.5;
+}
+.slide-flow .flow-arrow {
+  font-size: 22px;
+  color: var(--gray-mid);
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+.slide-flow .flow-sub-title {
+  position: absolute;
+  left: 54px;
+  top: 308px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.slide-flow .flow-tables {
+  position: absolute;
+  left: 45px;
+  top: 338px;
+  width: 1110px;
+  display: flex;
+  gap: 16px;
+}
+.slide-flow .flow-table {
+  flex: 1;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.slide-flow .flow-table th {
+  background: var(--navy-mid);
+  color: var(--white);
+  padding: 7px 10px;
+  text-align: left;
+}
+.slide-flow .flow-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #E0E0E2;
+  color: var(--gray-dark);
+  background: var(--white);
+}
+
+/* ═══════════════════════════════════════════════════
+   L09 · MODULE COLUMNS (5 modules A–E)
+   ════════════════════════════════════════════════════ */
+.slide-modules .modules-wrap {
+  position: absolute;
+  left: 27px;
+  top: 108px;
+  width: 1152px;
+  height: 550px;
+  display: flex;
+  gap: 8px;
+}
+.slide-modules .mod-col {
+  flex: 1;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+.slide-modules .mod-header {
+  padding: 8px 10px 4px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.slide-modules .mod-letter {
+  font-family: Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+}
+.slide-modules .mod-name {
+  font-size: 12px;
+  color: rgba(255,255,255,0.9);
+  margin-top: 2px;
+}
+.slide-modules .mod-items {
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.slide-modules .mod-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 5px 0;
+}
+.slide-modules .mod-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 0;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.slide-modules .mod-text {
+  font-size: 12px;
+  color: var(--gray-dark);
+  line-height: 1.45;
+}
+.slide-modules .mod-col.a .mod-header { background: var(--lime); }
+.slide-modules .mod-col.a .mod-letter { color: var(--navy); }
+.slide-modules .mod-col.a .mod-name   { color: var(--navy); }
+.slide-modules .mod-col.a .mod-dot    { background: var(--lime); }
+.slide-modules .mod-col.b .mod-header { background: var(--amber); }
+.slide-modules .mod-col.b .mod-dot    { background: var(--amber); }
+.slide-modules .mod-col.c .mod-header { background: var(--blue); }
+.slide-modules .mod-col.c .mod-dot    { background: var(--blue); }
+.slide-modules .mod-col.d .mod-header { background: var(--pink); }
+.slide-modules .mod-col.d .mod-dot    { background: var(--pink); }
+.slide-modules .mod-col.e .mod-header { background: #888888; }
+.slide-modules .mod-col.e .mod-dot    { background: #888888; }
+
+/* ═══════════════════════════════════════════════════
+   L10 · PHASE TIMELINE
+   ════════════════════════════════════════════════════ */
+.slide-phase {
+  background: var(--navy);
+}
+.slide-phase .pg-num { color: var(--gray-light); }
+.slide-phase .phase-header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 126px;
+  background: var(--navy-deep);
+  display: flex;
+  align-items: center;
+  padding: 0 45px;
+  gap: 20px;
+}
+.slide-phase .phase-num {
+  font-family: Arial, sans-serif;
+  font-size: 50px;
+  font-weight: 900;
+  color: var(--lime);
+  line-height: 1;
+}
+.slide-phase .phase-title-cn {
+  font-size: 33px;
+  font-weight: 700;
+  color: var(--white);
+  flex: 1;
+}
+.slide-phase .phase-hours {
+  background: var(--lime);
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 16px;
+  font-family: Arial, sans-serif;
+}
+.slide-phase .phase-period {
+  position: absolute;
+  left: 63px;
+  bottom: 14px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: #AAAACC;
+}
+.slide-phase .task-grid {
+  position: absolute;
+  left: 63px;
+  top: 153px;
+  width: 1080px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.slide-phase .task-card {
+  width: 202px;
+  height: 171px;
+  background: var(--navy-mid);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.slide-phase .task-stripe {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.slide-phase .task-stripe.lime   { background: var(--lime); }
+.slide-phase .task-stripe.amber  { background: var(--amber); }
+.slide-phase .task-stripe.blue   { background: var(--blue); color: var(--white); }
+.slide-phase .task-stripe.pink   { background: var(--pink); color: var(--white); }
+.slide-phase .task-name {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+}
+.slide-phase .task-hours {
+  padding: 6px 10px;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════
+   L11 · CONCEPT 3-NODE (Triangle)
+   ════════════════════════════════════════════════════ */
+.slide-concept .concept-intro {
+  position: absolute;
+  left: 54px;
+  top: 106px;
+  width: 1100px;
+  font-size: 13px;
+  color: var(--gray-mid);
+  line-height: 1.6;
+}
+/* Top node — centered, 200×200 */
+.slide-concept .node-top {
+  position: absolute;
+  left: 500px;
+  top: 148px;
+  width: 200px;
+  height: 200px;
+  background: var(--navy-deep);
+  padding: 16px;
+}
+/* Bottom-left node — 200×200, 40px gap below top */
+.slide-concept .node-bl {
+  position: absolute;
+  left: 175px;
+  top: 390px;
+  width: 200px;
+  height: 200px;
+  background: var(--lime);
+  padding: 16px;
+}
+/* Bottom-right node — symmetric to bl */
+.slide-concept .node-br {
+  position: absolute;
+  left: 825px;
+  top: 390px;
+  width: 200px;
+  height: 200px;
+  background: var(--amber);
+  padding: 16px;
+}
+.slide-concept .node-role {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 3px;
+}
+.slide-concept .node-en {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 10px;
+}
+.slide-concept .node-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.55;
+}
+.slide-concept .node-connector-label {
+  position: absolute;
+  left: 503px;
+  top: 358px;
+  background: var(--white);
+  padding: 5px 12px;
+  font-size: 12px;
+  color: var(--gray-dark);
+}
+.slide-concept .concept-footnote {
+  position: absolute;
+  left: 45px;
+  bottom: 25px;
+  font-size: 11px;
+  color: var(--gray-mid);
+  width: 1110px;
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════
+   L12 · RHYTHM SCHEDULE
+   ════════════════════════════════════════════════════ */
+.slide-rhythm .rhythm-intro {
+  position: absolute;
+  left: 54px;
+  top: 128px;
+  font-size: 13px;
+  color: var(--gray-mid);
+}
+.slide-rhythm .week-grid {
+  position: absolute;
+  left: 45px;
+  top: 180px;
+  width: 1110px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.slide-rhythm .week-header {
+  background: var(--navy);
+  color: var(--white);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 14px;
+  text-align: center;
+}
+.slide-rhythm .week-cell {
+  padding: 14px;
+  min-height: 108px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.slide-rhythm .week-cell.active {
+  background: var(--lime);
+  color: var(--navy);
+  font-weight: 700;
+}
+.slide-rhythm .week-cell.inactive {
+  background: var(--bg);
+  color: var(--gray-mid);
+}
+.slide-rhythm .month-review {
+  background: var(--navy-deep);
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 8px 14px;
+  text-align: center;
+  grid-column: 4;
+}
+.slide-rhythm .explain-rows {
+  position: absolute;
+  left: 45px;
+  top: 432px;
+  width: 1110px;
+}
+.slide-rhythm .explain-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  gap: 14px;
+}
+.slide-rhythm .explain-row:nth-child(odd)  { background: var(--bg); }
+.slide-rhythm .explain-row:nth-child(even) { background: var(--white); }
+.slide-rhythm .exp-accent {
+  width: 9px;
+  height: 41px;
+  background: var(--lime);
+  flex-shrink: 0;
+}
+.slide-rhythm .exp-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  min-width: 120px;
+}
+.slide-rhythm .exp-desc {
+  font-size: 13px;
+  color: var(--gray-dark);
+}
+
+/* ═══════════════════════════════════════════════════
+   L13 · SKILL CARDS (Dark Header + Card Grid)
+   ════════════════════════════════════════════════════ */
+.slide-cards {
+  background: var(--bg);
+}
+.slide-cards .cards-header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 95px;
+  background: var(--navy-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 54px;
+}
+.slide-cards .cards-title {
+  font-family: Arial, sans-serif;
+  font-size: 33px;
+  font-weight: 700;
+  color: var(--lime);
+  line-height: 1;
+}
+.slide-cards .cards-sub {
+  font-size: 14px;
+  color: var(--gray-light);
+  margin-top: 4px;
+}
+.slide-cards .card-grid {
+  position: absolute;
+  left: 45px;
+  top: 108px;
+  width: 1110px;
+  height: 547px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 8px;
+}
+.slide-cards .card-item {
+  background: var(--navy-mid);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.slide-cards .card-stripe {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.slide-cards .card-body {
+  padding: 10px 10px 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+/* ═══════════════════════════════════════════════════
+   L14 · CLOSING
+   ════════════════════════════════════════════════════ */
+.slide-closing {
+  background: var(--navy);
+}
+.slide-closing .corner-tl {
+  position: absolute;
+  top: 0; left: 0;
+  width: 270px; height: 270px;
+  background: var(--lime);
+}
+.slide-closing .corner-br {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 270px; height: 270px;
+  background: var(--lime);
+}
+.slide-closing .close-content {
+  position: absolute;
+  left: 180px;
+  top: 162px;
+}
+.slide-closing .close-main {
+  font-size: 75px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+.slide-closing .close-sub {
+  font-size: 25px;
+  color: var(--lime);
+  margin-bottom: 32px;
+}
+.slide-closing .close-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.slide-closing .close-line {
+  font-size: 15px;
+  color: var(--gray-light);
+}
+.slide-closing .close-link {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: var(--lime);
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════
+     L01 · COVER
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L01 · cover — 封面（深色 + LIME 角塊 + 主副標 + 兩方案標籤）</div>
+<div class="slide slide-cover">
+  <div class="corner-tl"></div>
+  <div class="corner-br"></div>
+  <div class="cover-content">
+    <div class="cover-client">客戶名稱</div>
+    <div class="cover-title">AI 推動提案</div>
+    <div class="cover-divider"></div>
+    <div class="cover-option lime">方案一｜AI 應用培訓方案（27H）</div>
+    <div class="cover-option light">方案二｜AI 戰略落地方案（140.5H）</div>
+  </div>
+  <div class="cover-footer">
+    <div class="cover-presenter">提案方：智谷網絡｜亞太教育訓練網（Kvalley）</div>
+    <div class="cover-date">民國 115 年 5 月</div>
+  </div>
+  <div class="kv-logo on-dark">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company">智谷網絡</div>
+      <div class="kv-since">Since 1996</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L02 · TABLE OF CONTENTS
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L02 · toc — 目錄（三欄 + LIME 左邊框 + 章節號徽）</div>
+<div class="slide slide-toc">
+  <div class="std-header">
+    <div class="lime-bar"></div>
+    <div class="std-title">目錄</div>
+    <div class="std-en">Table of Contents</div>
+  </div>
+  <div class="toc-list">
+    <div class="toc-item"><span class="toc-ch">Ch.1</span><span class="toc-name">計畫緣起</span><span class="toc-pg">P.3</span></div>
+    <div class="toc-item"><span class="toc-ch">Ch.2</span><span class="toc-name">AI 應用機會地圖</span><span class="toc-pg">P.5</span></div>
+    <div class="toc-item"><span class="toc-ch">Ch.3</span><span class="toc-name">兩種方案對照</span><span class="toc-pg">P.8</span></div>
+    <div class="toc-item"><span class="toc-ch">Ch.4</span><span class="toc-name">方案一｜AI 應用培訓方案</span><span class="toc-pg">P.10</span></div>
+    <div class="toc-item"><span class="toc-ch">Ch.5</span><span class="toc-name">方案二｜AI 戰略落地方案</span><span class="toc-pg">P.20</span></div>
+    <div class="toc-item"><span class="toc-ch">Ch.6</span><span class="toc-name">智谷三大實戰教具</span><span class="toc-pg">P.29</span></div>
+    <div class="toc-item"><span class="toc-ch">Ch.7</span><span class="toc-name">智谷實戰案例</span><span class="toc-pg">P.33</span></div>
+  </div>
+  <div class="kv-logo">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company">智谷網絡</div>
+      <div class="kv-since">Since 1996</div>
+    </div>
+  </div>
+  <div class="pg-num">2 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L03 · CHAPTER DIVIDER
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L03 · chapter — 章節分隔（深色 + 大 Ch.N + 中英標題 + 副標語）</div>
+<div class="slide slide-chapter">
+  <div class="corner-tl"></div>
+  <div class="corner-br"></div>
+  <div class="ch-num">Ch.1</div>
+  <div class="ch-title">計畫緣起</div>
+  <div class="ch-en">Project Background</div>
+  <div class="ch-divider"></div>
+  <div class="ch-tagline">為何需要 AI？智谷提供兩種路徑</div>
+  <div class="kv-logo on-dark">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company">智谷網絡</div>
+      <div class="kv-since">Since 1996</div>
+    </div>
+  </div>
+  <div class="pg-num" style="color: var(--gray-mid);">3 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L04 · SPLIT CONTENT
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L04 · split — 分割版（左淡內容 + 右 NAVY 側面板 + 兩方案比較卡）</div>
+<div class="slide slide-split">
+  <div class="std-header">
+    <div class="lime-bar"></div>
+    <div class="std-title">計畫緣起</div>
+    <div class="std-en">Project Background</div>
+  </div>
+  <!-- Right panel -->
+  <div class="right-panel">
+    <div style="position:absolute;top:27px;left:36px;">
+      <div class="rh-title">計畫緣起</div>
+      <div class="rh-en">Project Background</div>
+    </div>
+    <div style="position:absolute;top:72px;left:36px;right:0;height:4px;background:var(--lime)"></div>
+    <div class="right-bullets">
+      <div class="bullet-item">
+        <div class="bullet-dot"></div>
+        <div class="bullet-text">全球企業 AI 應用加速，製造業面臨轉型壓力</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-dot"></div>
+        <div class="bullet-text">員工日常工作中大量重複性任務可由 AI 輔助</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-dot"></div>
+        <div class="bullet-text">競爭對手導入 AI 後效率提升，形成競爭落差</div>
+      </div>
+      <div class="bullet-item">
+        <div class="bullet-dot"></div>
+        <div class="bullet-text">企業具備跨部門推動 AI 的組織條件與意願</div>
+      </div>
+    </div>
+  </div>
+  <!-- Option cards -->
+  <div style="position:absolute;left:54px;top:128px;font-size:12px;color:var(--gray-mid);">依組織當下的需求與節奏，選擇最適配的推動方式：</div>
+  <div class="option-cards">
+    <div class="option-card">
+      <div class="option-card-header lime">方案一｜AI 應用培訓方案</div>
+      <div class="option-card-meta lime-text">純培訓 · A1–A5 五門課 · 約 27H · 4 個月</div>
+      <div class="option-card-body">聚焦員工個人 AI 應用能力的快速建立，適合希望先看到培訓成效、再決定後續深化方式的組織。</div>
+    </div>
+    <div class="option-card">
+      <div class="option-card-header blue">方案二｜AI 戰略落地方案</div>
+      <div class="option-card-meta amber-text">培訓 + 諮詢 + 陪跑 · 140.5H · 12 個月</div>
+      <div class="option-card-body">從共識建立到部門 Workout 機制落地，建立組織級 AI 推動能力，讓 AI 改善成為日常運作的一部分。</div>
+    </div>
+  </div>
+  <div class="kv-logo">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company">智谷網絡</div>
+      <div class="kv-since">Since 1996</div>
+    </div>
+  </div>
+  <div class="pg-num">4 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L05 · DATA TABLE
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L05 · data-table — 資料表格（NAVY 表頭 + 交替灰白 + LIME 標籤欄）</div>
+<div class="slide slide-table">
+  <div class="std-header">
+    <div class="lime-bar"></div>
+    <div class="std-title">廠務部門 AI 應用場景</div>
+    <div class="std-en">Plant Operations — AI Use Cases</div>
+  </div>
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th style="width:90px">部門</th>
+        <th style="width:160px">痛點 / 場景</th>
+        <th>AI 應用方式</th>
+        <th style="width:100px">建議工具</th>
+        <th style="width:80px">效益估算</th>
+        <th style="width:70px">難度</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-tag">廠務<br>設備</td>
+        <td>設備維修紀錄查詢費時</td>
+        <td>建立設備維修知識庫，AI 輔助快速查找歷史紀錄與解決方案</td>
+        <td>Claude / ChatGPT + NotebookLM</td>
+        <td>省 2–4H/週</td>
+        <td>低</td>
+      </tr>
+      <tr>
+        <td class="col-tag">品管<br>製程</td>
+        <td>異常報告撰寫耗時</td>
+        <td>AI 依結構化範本自動生成異常報告初稿，人工確認後送簽</td>
+        <td>Claude / GPT-4o</td>
+        <td>省 1H/件</td>
+        <td>低</td>
+      </tr>
+      <tr>
+        <td class="col-tag">採購<br>倉管</td>
+        <td>供應商詢比價來回耗時</td>
+        <td>AI 起草詢價函、比較報價單、生成採購建議摘要</td>
+        <td>ChatGPT + Make</td>
+        <td>省 3H/次</td>
+        <td>中</td>
+      </tr>
+      <tr>
+        <td class="col-tag">工程<br>研發</td>
+        <td>SOP 文件版本混亂</td>
+        <td>AI 整合多版本 SOP、標記差異、生成對照摘要</td>
+        <td>Claude + Google Docs</td>
+        <td>省 5H/次</td>
+        <td>低</td>
+      </tr>
+      <tr>
+        <td class="col-tag">人資<br>行政</td>
+        <td>教育訓練資料整理慢</td>
+        <td>AI 自動摘要課程錄影、生成測驗題、製作學習報告</td>
+        <td>Gemini + NotebookLM</td>
+        <td>省 4H/場</td>
+        <td>低</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="table-note">※ 地端 LLM 部署後，敏感製程資料改由地端處理，資安等級另行評估</div>
+  <div class="kv-logo">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company">智谷網絡</div>
+      <div class="kv-since">Since 1996</div>
+    </div>
+  </div>
+  <div class="pg-num">6 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L06 · INFO GRID (2×2 KV Cards)
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L06 · info-grid — 資訊卡格（2×2，LIME 表頭 + 灰底內容）</div>
+<div class="slide slide-info-grid">
+  <div class="std-header">
+    <div class="lime-bar"></div>
+    <div class="std-title">方案一 計畫說明</div>
+    <div class="std-en">Option A — Overview</div>
+  </div>
+  <div class="grid-2x2">
+    <div class="info-card">
+      <div class="info-card-header">期程</div>
+      <div class="info-card-body">約 4 個月（依客戶實際排程調整）</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-header">對象</div>
+      <div class="info-card-body">A1 高階主管 / A2 全員 / A3 培訓對象 / A4 部門主管 / A5 種子人員</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-header">形式</div>
+      <div class="info-card-body">實體授課為主（部分課程可遠距同步）</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-header">性質</div>
+      <div class="info-card-body">純培訓方案 — 無顧問諮詢、無部門陪跑，聚焦員工個人能力建立</div>
+    </div>
+  </div>
+  <div class="card-footnote">全案顧問投入：約 27 H（含 A1–A5 五門課程授課時數）</div>
+  <div class="kv-logo">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company">智谷網絡</div>
+      <div class="kv-since">Since 1996</div>
+    </div>
+  </div>
+  <div class="pg-num">11 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L07 · COURSE DETAIL
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L07 · course — 課程詳細（NAVY 全寬標題列 + AMBER 時數 badge + 說明文 + 表格）</div>
+<div class="slide slide-course">
+  <div class="course-header">
+    <div class="course-code">A1</div>
+    <div class="course-title">高階主管 AI 演講</div>
+    <div class="course-duration">2 小時</div>
+    <div class="kv-logo on-dark" style="position:static;margin-left:auto;">
+      <div class="kv-k">K</div>
+      <div class="kv-text">
+        <div class="kv-company" style="color:var(--white)">智谷網絡</div>
+        <div class="kv-since" style="color:var(--gray-light)">Since 1996</div>
+      </div>
+    </div>
+  </div>
+  <div class="course-desc">
+    Phase 1 最關鍵啟蒙活動。主講者親自帶領，協助主管層對 AI 落地建立具體想像與變革意願。透過產業案例與互動問答，讓每位主管離開時都有「我們可以從哪裡開始」的具體答案。
+  </div>
+  <table class="course-table">
+    <thead>
+      <tr>
+        <th style="width:180px">課程要素</th>
+        <th style="width:80px">時數</th>
+        <th>內容摘要</th>
+        <th style="width:180px">交付物</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>主管啟蒙演講</td><td>1.5H</td><td>AI 真正改變的是什麼？台灣企業 AI 落地案例精選，從看案例到想自己</td><td>演講簡報 PDF</td></tr>
+      <tr><td>互動問答</td><td>0.5H</td><td>現場提問：你最想解決的工作問題是什麼？AI 現在能做到嗎？</td><td>問答記錄整理</td></tr>
+      <tr><td>課前準備</td><td>含於鐘點費</td><td>客製化案例研究（依客戶產業調整），PPT 設計製作</td><td>—</td></tr>
+      <tr><td>課後追蹤</td><td>含於鐘點費</td><td>主管意見問卷，提供主管關注點分析報告，作為後續規劃依據</td><td>主管意見分析報告</td></tr>
+    </tbody>
+  </table>
+  <div class="pg-num">13 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L08 · ASSESSMENT FLOW
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L08 · assess-flow — 評估流程（水平三步 + 兩欄表格）</div>
+<div class="slide slide-flow">
+  <div class="std-header">
+    <div class="lime-bar"></div>
+    <div class="std-title">AI 能力評鑑體系</div>
+    <div class="std-en">AI Capability Assessment Framework</div>
+  </div>
+  <div class="flow-intro">本案不只「上課」—— 每位學員的 AI 能力在培訓前後均有量化追蹤。</div>
+  <div class="flow-boxes">
+    <div class="flow-box blue-box">
+      <div class="flow-box-title">培訓前測</div>
+      <div class="flow-box-when">A2 開課前</div>
+      <div class="flow-box-desc">線上問卷建立每位學員 AI 能力基線</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box amber-box">
+      <div class="flow-box-title">課程結業評估</div>
+      <div class="flow-box-when">A1–A5 各課</div>
+      <div class="flow-box-desc">量表 + 實作作業，即時檢核學習成效</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box lime-box">
+      <div class="flow-box-title" style="color:var(--navy)">培訓後測</div>
+      <div class="flow-box-when" style="color:rgba(26,26,46,0.85)">A5 結訓後</div>
+      <div class="flow-box-desc" style="color:rgba(26,26,46,0.9)">線上問卷 + 對照前測 + 個人能力檔案</div>
+    </div>
+  </div>
+  <div class="flow-sub-title">評鑑框架：五大能力 × L1–L6 層次</div>
+  <div class="flow-tables">
+    <table class="flow-table">
+      <thead><tr><th>能力維度</th><th>說明</th></tr></thead>
+      <tbody>
+        <tr><td>資訊擷取</td><td>從大量資料找出關鍵資訊</td></tr>
+        <tr><td>內容生成</td><td>撰寫、彙整、翻譯各類文件</td></tr>
+        <tr><td>流程設計</td><td>規劃 AI 輔助工作流程</td></tr>
+        <tr><td>工具整合</td><td>跨工具協作與 API 連接</td></tr>
+        <tr><td>改善主持</td><td>帶領部門 AI 改善會議</td></tr>
+      </tbody>
+    </table>
+    <table class="flow-table">
+      <thead><tr><th>層次</th><th>定義</th></tr></thead>
+      <tbody>
+        <tr><td>L1 認識</td><td>知道 AI 能做什麼</td></tr>
+        <tr><td>L2 嘗試</td><td>能使用工具完成基本任務</td></tr>
+        <tr><td>L3 應用</td><td>穩定產出符合工作需求的成果</td></tr>
+        <tr><td>L4 優化</td><td>能自主改善 Prompt 與工作流</td></tr>
+        <tr><td>L5 指導</td><td>能指導他人使用 AI 工具</td></tr>
+        <tr><td>L6 創新</td><td>能設計新的 AI 應用場景</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="kv-logo">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company">智谷網絡</div>
+      <div class="kv-since">Since 1996</div>
+    </div>
+  </div>
+  <div class="pg-num">19 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L09 · MODULE COLUMNS
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L09 · modules — 五模組欄位（各模組獨立配色 + 子項條列）</div>
+<div class="slide slide-modules">
+  <div class="std-header">
+    <div class="lime-bar"></div>
+    <div class="std-title">服務內容五大模組</div>
+    <div class="std-en">Five Service Modules</div>
+  </div>
+  <div class="modules-wrap">
+    <div class="mod-col a">
+      <div class="mod-header"><div class="mod-letter">A</div><div class="mod-name">培訓課程</div></div>
+      <div class="mod-items">
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">A1 高階主管 AI 演講（2H）</div></div>
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">A2 AIGC 陪你飛（3H）</div></div>
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">A3 AI 指令工作術（6H）</div></div>
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">A4 主管課（4H）</div></div>
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">A5 種子實戰課（12H）</div></div>
+      </div>
+    </div>
+    <div class="mod-col b">
+      <div class="mod-header"><div class="mod-letter">B</div><div class="mod-name">組織診斷與啟動</div></div>
+      <div class="mod-items">
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">B1 最高主管說明會（1H）</div></div>
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">B2 主管策略共識工作坊（3.5H）</div></div>
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">B3 先鋒單位需求訪談 ×8（8H）</div></div>
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">B4 種子挑選辦法設計（3H）</div></div>
+      </div>
+    </div>
+    <div class="mod-col c">
+      <div class="mod-header"><div class="mod-letter">C</div><div class="mod-name">部門推動陪跑</div></div>
+      <div class="mod-items">
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">C1 部門 Workout 雙週支援 ×16（64H）</div></div>
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">C2 GRD 計分卡 + 委員會章程（4H）</div></div>
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">C3 Workout 議程設計（4H）</div></div>
+      </div>
+    </div>
+    <div class="mod-col d">
+      <div class="mod-header"><div class="mod-letter">D</div><div class="mod-name">文化建設</div></div>
+      <div class="mod-items">
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">D1 第一波創作大賽（評審 + 頒獎，2H）</div></div>
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">D2 第二波應用提案大賽（2H）</div></div>
+      </div>
+    </div>
+    <div class="mod-col e">
+      <div class="mod-header"><div class="mod-letter">E</div><div class="mod-name">結案</div></div>
+      <div class="mod-items">
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">E1 Phase 2 末總結報告（4H）</div></div>
+        <div class="mod-item"><div class="mod-dot"></div><div class="mod-text">E2 延伸方向建議書（2H）</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="kv-logo">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company">智谷網絡</div>
+      <div class="kv-since">Since 1996</div>
+    </div>
+  </div>
+  <div class="pg-num">22 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L10 · PHASE TIMELINE
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L10 · phase-timeline — 階段時序（深藍標題列 + 暗色任務卡 + LIME/AMBER 模組條）</div>
+<div class="slide slide-phase">
+  <div class="phase-header">
+    <div class="phase-num">Phase 1</div>
+    <div class="phase-title-cn">建立 AI 共同認識</div>
+    <div class="phase-hours">顧問投入 36.5 H</div>
+    <div class="kv-logo on-dark" style="position:static;margin-left:16px;">
+      <div class="kv-k">K</div>
+      <div class="kv-text">
+        <div class="kv-company" style="color:var(--white)">智谷網絡</div>
+        <div class="kv-since" style="color:var(--gray-light)">Since 1996</div>
+      </div>
+    </div>
+  </div>
+  <div class="phase-period">約第 1 – 4 月</div>
+  <div class="task-grid">
+    <div class="task-card">
+      <div class="task-stripe amber">B1</div>
+      <div class="task-name">最高主管說明會</div>
+      <div class="task-hours" style="color:var(--amber)">1H</div>
+    </div>
+    <div class="task-card">
+      <div class="task-stripe lime">A1</div>
+      <div class="task-name">高階主管 AI 演講</div>
+      <div class="task-hours" style="color:var(--lime)">2H</div>
+    </div>
+    <div class="task-card">
+      <div class="task-stripe amber">B2</div>
+      <div class="task-name">主管策略共識工作坊</div>
+      <div class="task-hours" style="color:var(--amber)">3.5H</div>
+    </div>
+    <div class="task-card">
+      <div class="task-stripe amber">B3</div>
+      <div class="task-name">先鋒單位需求訪談 ×8</div>
+      <div class="task-hours" style="color:var(--amber)">8H</div>
+    </div>
+    <div class="task-card">
+      <div class="task-stripe amber">B4</div>
+      <div class="task-name">種子挑選辦法設計</div>
+      <div class="task-hours" style="color:var(--amber)">3H</div>
+    </div>
+    <div class="task-card">
+      <div class="task-stripe lime">A2</div>
+      <div class="task-name">AIGC 陪你飛（全員）</div>
+      <div class="task-hours" style="color:var(--lime)">3H</div>
+    </div>
+    <div class="task-card">
+      <div class="task-stripe lime">A3</div>
+      <div class="task-name">AI 指令工作術</div>
+      <div class="task-hours" style="color:var(--lime)">6H</div>
+    </div>
+    <div class="task-card">
+      <div class="task-stripe pink">D1</div>
+      <div class="task-name">第一波創作大賽</div>
+      <div class="task-hours" style="color:var(--pink)">2H</div>
+    </div>
+    <div class="task-card">
+      <div class="task-stripe amber">月×4</div>
+      <div class="task-name">月度進度會</div>
+      <div class="task-hours" style="color:var(--amber)">8H</div>
+    </div>
+  </div>
+  <div class="pg-num">23 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L11 · CONCEPT 3-NODE
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L11 · concept-3node — 三角關係圖（三色塊 + 角色說明）</div>
+<div class="slide slide-concept">
+  <div class="std-header">
+    <div class="lime-bar"></div>
+    <div class="std-title">種子三角小隊</div>
+    <div class="std-en">Seed Triangle Team — Phase 2 核心引擎</div>
+  </div>
+  <div class="concept-intro">Phase 2 啟動時，每個推動部門組成「種子三角小隊」作為 AI 改善的執行單位。三方角色明確、權責互補。</div>
+  <div class="node-top">
+    <div class="node-role">部門主管</div>
+    <div class="node-en">Domain Owner</div>
+    <div class="node-desc">拍板推動方向<br>提供資源<br>對 KPI 負責</div>
+  </div>
+  <div class="node-bl">
+    <div class="node-role" style="color:var(--navy)">種子</div>
+    <div class="node-en" style="color:rgba(26,26,46,0.8)">Seed</div>
+    <div class="node-desc" style="color:rgba(26,26,46,0.9)">主持 Workout<br>執行 GRD 推進<br>跨部門協作</div>
+  </div>
+  <div class="node-br">
+    <div class="node-role" style="color:var(--navy)">IT 後援</div>
+    <div class="node-en" style="color:rgba(26,26,46,0.8)">Backup</div>
+    <div class="node-desc" style="color:rgba(26,26,46,0.9)">工具選型支援<br>技術疑難排除<br>地端工具建置</div>
+  </div>
+  <div class="node-connector-label">每雙週 Workout 協同</div>
+  <div class="concept-footnote">為什麼是「三角」？AI 改善必涉及部門權力（主管）、執行細節（種子）、技術可行性（IT），三方缺一不可。</div>
+  <div class="kv-logo">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company">智谷網絡</div>
+      <div class="kv-since">Since 1996</div>
+    </div>
+  </div>
+  <div class="pg-num">25 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L12 · RHYTHM SCHEDULE
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L12 · rhythm — 週期節奏表（四欄週次 + LIME 活躍週 + 說明列）</div>
+<div class="slide slide-rhythm">
+  <div class="std-header">
+    <div class="lime-bar"></div>
+    <div class="std-title">Workout 運作節奏</div>
+    <div class="std-en">Biweekly Workout Rhythm — C1 模組</div>
+  </div>
+  <div class="rhythm-intro">部門 Workout 由客戶自己開，顧問每雙週列席指導（4H/場 × 16 場 = 64H）</div>
+  <div class="week-grid">
+    <div class="week-header">第 1 週</div>
+    <div class="week-header">第 2 週</div>
+    <div class="week-header">第 3 週</div>
+    <div class="week-header">第 4 週</div>
+    <div class="week-cell active">雙週 Workout<br>顧問列席 4H</div>
+    <div class="week-cell inactive">日常工作推進<br>（無顧問）</div>
+    <div class="week-cell active">雙週 Workout<br>顧問列席 4H</div>
+    <div class="week-cell inactive">日常工作推進<br>（無顧問）</div>
+    <div class="month-review">月度 GRD Review<br>高階主管列席</div>
+  </div>
+  <div class="explain-rows">
+    <div class="explain-row">
+      <div class="exp-accent"></div>
+      <div class="exp-label">客戶自己開</div>
+      <div class="exp-desc">顧問不主持、不代推動，Workout 是客戶自己的會議</div>
+    </div>
+    <div class="explain-row">
+      <div class="exp-accent"></div>
+      <div class="exp-label">顧問列席指導</div>
+      <div class="exp-desc">每雙週 4H 顧問到場，協助種子解決卡關問題</div>
+    </div>
+    <div class="explain-row">
+      <div class="exp-accent"></div>
+      <div class="exp-label">月度 GRD Review</div>
+      <div class="exp-desc">雙週第二場發表會合併月度高階檢視，不另開會議</div>
+    </div>
+  </div>
+  <div class="kv-logo">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company">智谷網絡</div>
+      <div class="kv-since">Since 1996</div>
+    </div>
+  </div>
+  <div class="pg-num">27 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L13 · SKILL CARDS (Dark Header + 6×2 Grid)
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L13 · skill-cards — 技能卡格（極深標題列 + 多色卡片 6×2）</div>
+<div class="slide slide-cards">
+  <div class="cards-header">
+    <div class="cards-title">AI Capability Cards</div>
+    <div class="cards-sub">17 張能力卡 + 阻力卡 · 智谷自主研發</div>
+  </div>
+  <div class="kv-logo on-dark" style="top:22px;right:22px;">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company" style="color:var(--white)">智谷網絡</div>
+      <div class="kv-since" style="color:var(--gray-light)">Since 1996</div>
+    </div>
+  </div>
+  <div class="card-grid">
+    <div class="card-item"><div class="card-stripe" style="background:var(--lime)">Extract</div><div class="card-body">抽取資訊</div></div>
+    <div class="card-item"><div class="card-stripe" style="background:var(--amber)">Write</div><div class="card-body">生成文字</div></div>
+    <div class="card-item"><div class="card-stripe" style="background:var(--blue);color:var(--white)">Listen</div><div class="card-body">語音轉文字</div></div>
+    <div class="card-item"><div class="card-stripe" style="background:var(--pink);color:var(--white)">Classify</div><div class="card-body">自動分類</div></div>
+    <div class="card-item"><div class="card-stripe" style="background:var(--navy-deep);color:var(--white)">Predict</div><div class="card-body">預測趨勢</div></div>
+    <div class="card-item"><div class="card-stripe" style="background:var(--lime)">Patrol</div><div class="card-body">異常偵測</div></div>
+    <div class="card-item"><div class="card-stripe" style="background:var(--amber)">Research</div><div class="card-body">搜尋整理</div></div>
+    <div class="card-item"><div class="card-stripe" style="background:var(--blue);color:var(--white)">Remember</div><div class="card-body">記憶脈絡</div></div>
+    <div class="card-item"><div class="card-stripe" style="background:var(--pink);color:var(--white)">Store</div><div class="card-body">結構化儲存</div></div>
+    <div class="card-item"><div class="card-stripe" style="background:var(--navy-deep);color:var(--white)">Transform</div><div class="card-body">格式轉換</div></div>
+    <div class="card-item"><div class="card-stripe" style="background:var(--lime)">See</div><div class="card-body">看懂圖像</div></div>
+    <div class="card-item"><div class="card-stripe" style="background:var(--amber)">Draw</div><div class="card-body">生成圖片</div></div>
+  </div>
+  <div class="pg-num">30 / 35</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     L14 · CLOSING
+     ════════════════════════════════════════════════════ -->
+<div class="layout-label">L14 · closing — 結語（深色 + LIME 角塊 + 謝謝 + 聯絡資訊）</div>
+<div class="slide slide-closing">
+  <div class="corner-tl"></div>
+  <div class="corner-br"></div>
+  <div class="close-content">
+    <div class="close-main">謝謝您</div>
+    <div class="close-sub">期待與貴公司的合作</div>
+    <div class="close-info">
+      <div class="close-line">智谷網絡｜亞太教育訓練網（Kvalley）</div>
+      <div class="close-line">Jimmy Lin｜jimmy4lin@gmail.com</div>
+      <div class="close-link">www.kvalley.biz</div>
+    </div>
+  </div>
+  <div class="kv-logo on-dark">
+    <div class="kv-k">K</div>
+    <div class="kv-text">
+      <div class="kv-company">智谷網絡</div>
+      <div class="kv-since">Since 1996</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
